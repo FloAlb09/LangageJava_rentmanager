@@ -8,29 +8,27 @@ import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
 
 //modele
-import com.epf.rentmanager.modele.Client;
 import com.epf.rentmanager.modele.Vehicle;
 
 //dao
-import com.epf.rentmanager.dao.ClientDao;
 import com.epf.rentmanager.dao.VehicleDao;
 
 //Classe
 public class VehicleService {
 
 	private VehicleDao vehicleDao;
-	public static VehicleService instance;
+	public static VehicleService vehicleInstance;
 	
 	private VehicleService() {
 		this.vehicleDao = VehicleDao.getInstance();
 	}
 	
-	public static VehicleService getInstance() {
-		if (instance == null) {
-			instance = new VehicleService();
+	public static VehicleService getVehicleInstance() {
+		if (vehicleInstance == null) {
+			vehicleInstance = new VehicleService();
 		}
 		
-		return instance;
+		return vehicleInstance;
 	}
 
 	public long update(Vehicle vehicle, Long id) throws ServiceException {
