@@ -6,7 +6,6 @@ import java.sql.*;
 import java.time.LocalDate;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 //exception
@@ -19,60 +18,64 @@ import com.epf.rentmanager.persistence.ConnectionManager;
 //Classe
 public class ClientDao {
 	
-	private static ClientDao instance = null;
+	private static ClientDao clientInstance = null;
 	private ClientDao() {}
-	public static ClientDao getInstance() {
-		if(instance == null) {
-			instance = new ClientDao();
+	public static ClientDao getClientInstance() {
+		if(clientInstance == null) {
+			clientInstance = new ClientDao();
 		}
-		return instance;
+		return clientInstance;
 	}
-	
-	private static final String CREATE_CLIENT_QUERY = "INSERT INTO Client(nom, prenom, email, naissance) VALUES(?, ?, ?, ?);";
-	private static final String DELETE_CLIENT_QUERY = "DELETE FROM Client WHERE id=?;";
-	private static final String FIND_CLIENT_QUERY = "SELECT nom, prenom, email, naissance FROM Client WHERE id=?;";
+
 	private static final String FIND_CLIENTS_QUERY = "SELECT id, nom, prenom, email, naissance FROM Client;";
-
-	private static final String COUNT_CLIENTS_QUERY = "SELECT COUNT(id) AS count FROM Client;";
+	private static final String FIND_CLIENT_QUERY = "SELECT nom, prenom, email, naissance FROM Client WHERE id=?;";
+	private static final String CREATE_CLIENT_QUERY = "INSERT INTO Client(nom, prenom, email, naissance) VALUES(?, ?, ?, ?);";
 	private static final String UPDATE_CLIENT_QUERY = "UPDATE Client SET nom = ?, prenom = ?, email = ?, naissance = ? WHERE id\n" + "= ?;";
+	private static final String DELETE_CLIENT_QUERY = "DELETE FROM Client WHERE id=?;";
+	private static final String COUNT_CLIENTS_QUERY = "SELECT COUNT(id) AS count FROM Client;";
 
-	public long update(Client client, Long id) throws DaoException {
-		//"UPDATE Client SET nom = ?, prenom = ?, email = ?, naissance = ? WHERE id\n" + "= ?;"
-		String nom = client.getNom();
-		String prenom = client.getPrenom();
-		String email = client.getEmail();
-		LocalDate naissance = client.getNaissance();
-		//renvoie 1 si le update a ete effectue, 0 sinon
-		try (Connection con = ConnectionManager.getConnection()) { //connexion a un SGBD - creer l'objet de connexion
-			//creer l'objet preparedStatement
-			PreparedStatement ps = con.prepareStatement(UPDATE_CLIENT_QUERY);
-			//specifie le premier parametre de la requete - definit la valeur String du nom du client sur l'index 1 du parametre donne
-			ps.setString(1,nom);
-			ps.setString(2, prenom);
-			ps.setString(3, email);
-			ps.setDate(4, Date.valueOf(naissance));
-			ps.setLong(5, id);
-			//executer la requete
-			return ps.executeUpdate();
+
+	public ArrayList<Client> findAll() throws DaoException {
+		ArrayList<Client> listClient = new ArrayList<Client>();
+		try (Connection con = ConnectionManager.getConnection()) {
+			PreparedStatement ps = con.prepareStatement(FIND_CLIENTS_QUERY);
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()){
+				long id = rs.getLong("id");
+				String nom = rs.getString("nom");
+				String prenom = rs.getString("prenom");
+				String email = rs.getString("email");
+				LocalDate naissance = rs.getDate("naissance").toLocalDate();
+				Client client = new Client(id, nom, prenom, email, naissance);
+				listClient.add(client);
+			}
+			return listClient;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return null;
 	}
-
-	public long count() throws DaoException {
-		//"SELECT COUNT(id) AS count FROM Client;"
+	public Optional<Client> findById(long id) throws DaoException {
+		//"SELECT nom, prenom, email, naissance FROM Client WHERE id=?;"
 		try (Connection con = ConnectionManager.getConnection()) {
 			//statement permettant d'injecter une val au lieu des ? de la query securite envers les injections SQL
-			PreparedStatement ps = con.prepareStatement(COUNT_CLIENTS_QUERY);
+			PreparedStatement ps = con.prepareStatement(FIND_CLIENT_QUERY);
+			//injection l'id à l'index  1 au premier ? rencontrer dans la requete
+			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
-			//moves the cursor to the last row in this ResultSet object.
-			rs.last();
-			return rs.getInt(1);
+			rs.next();
+			String nom = rs.getString("nom");
+			String prenom = rs.getString("prenom");
+			String email = rs.getString("email");
+			//convertir un objet de type Date en objet de type LocalDate
+			LocalDate naissance = rs.getDate("naissance").toLocalDate();
+			//ceration du client a partir du resultset
+			Client client = new Client(nom, prenom, email, naissance);
+			return Optional.of(client);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return Optional.empty();
 	}
 
 	public long create(Client client) throws DaoException {
@@ -104,7 +107,31 @@ public class ClientDao {
 		}
 		return 0;
 	}
-	
+
+	public long update(Client client, Long id) throws DaoException {
+		//"UPDATE Client SET nom = ?, prenom = ?, email = ?, naissance = ? WHERE id\n" + "= ?;"
+		String nom = client.getNom();
+		String prenom = client.getPrenom();
+		String email = client.getEmail();
+		LocalDate naissance = client.getNaissance();
+		//renvoie 1 si le update a ete effectue, 0 sinon
+		try (Connection con = ConnectionManager.getConnection()) { //connexion a un SGBD - creer l'objet de connexion
+			//creer l'objet preparedStatement
+			PreparedStatement ps = con.prepareStatement(UPDATE_CLIENT_QUERY);
+			//specifie le premier parametre de la requete - definit la valeur String du nom du client sur l'index 1 du parametre donne
+			ps.setString(1,nom);
+			ps.setString(2, prenom);
+			ps.setString(3, email);
+			ps.setDate(4, Date.valueOf(naissance));
+			ps.setLong(5, id);
+			//executer la requete
+			return ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
 	public long delete(Client client) throws DaoException {
 		//"DELETE FROM Client WHERE id=?;"
 		Long id = client.getId();
@@ -122,47 +149,18 @@ public class ClientDao {
 		return 0;
 	}
 
-	public Client findById(long id) throws DaoException {
-		//"SELECT nom, prenom, email, naissance FROM Client WHERE id=?;"
+	public long count() throws DaoException {
+		//"SELECT COUNT(id) AS count FROM Client;"
 		try (Connection con = ConnectionManager.getConnection()) {
 			//statement permettant d'injecter une val au lieu des ? de la query securite envers les injections SQL
-			PreparedStatement ps = con.prepareStatement(FIND_CLIENT_QUERY);
-			//injection l'id à l'index  1 au premier ? rencontrer dans la requete
-			ps.setLong(1, id);
+			PreparedStatement ps = con.prepareStatement(COUNT_CLIENTS_QUERY);
 			ResultSet rs = ps.executeQuery();
-			rs.next();
-			String nom = rs.getString("nom");
-			String prenom = rs.getString("prenom");
-			String email = rs.getString("email");
-			//convertir un objet de type Date en objet de type LocalDate
-			LocalDate naissance = rs.getDate("naissance").toLocalDate();
-			//ceration du client a partir du resultset
-			Client client = new Client(nom, prenom, email, naissance);
-			return client;
+			//moves the cursor to the last row in this ResultSet object.
+			rs.last();
+			return rs.getInt(1);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return 0;
 	}
-
-	public List<Client> findAll() throws DaoException {
-		ArrayList<Client> listClient = new ArrayList<Client>();
-		try (Connection con = ConnectionManager.getConnection()) {
-			PreparedStatement ps = con.prepareStatement(FIND_CLIENTS_QUERY);
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()){
-				long id = rs.getLong("id");
-				String nom = rs.getString("nom");
-				String prenom = rs.getString("prenom");
-				String email = rs.getString("email");
-				LocalDate naissance = rs.getDate("naissance").toLocalDate();
-				Client client = new Client(id, nom, prenom, email, naissance);
-				listClient.add(client);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return listClient;
-	}
-
 }

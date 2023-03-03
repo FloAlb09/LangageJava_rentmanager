@@ -16,9 +16,6 @@ import com.epf.rentmanager.service.ReservationService;
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1L;
 
 	private ClientService clientService;
@@ -26,13 +23,13 @@ public class HomeServlet extends HttpServlet {
 
 	private ReservationService reservationService;
 
-	public static ClientService instance;
+	public static ClientService clientInstance;
 	public static VehicleService vehicleInstance;
 	public static ReservationService reservationInstance;
 
 
 	public HomeServlet() {
-		this.clientService = ClientService.getInstance();
+		this.clientService = ClientService.getClientInstance();
 		this.vehicleService = VehicleService.getVehicleInstance();
 		this.reservationService = ReservationService.getReservationInstance();
 	}
@@ -42,7 +39,6 @@ public class HomeServlet extends HttpServlet {
 	//verbe doGet
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
-			System.out.println(clientService.count());
 			request.setAttribute("nbClients", clientService.count());
 			request.setAttribute("nbVehicles", vehicleService.count());
 			request.setAttribute("nbReservations", reservationService.count());

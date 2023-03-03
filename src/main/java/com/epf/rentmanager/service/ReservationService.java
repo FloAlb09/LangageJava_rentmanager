@@ -19,7 +19,7 @@ public class ReservationService {
     public static ReservationService reservationInstance;
 
     private ReservationService() {
-        this.reservationDao = ReservationDao.getInstance();
+        this.reservationDao = ReservationDao.getResrevationInstance();
     }
 
     public static ReservationService getReservationInstance() {
@@ -31,7 +31,6 @@ public class ReservationService {
     }
 
     public List<Reservation> findAll() throws ServiceException {
-        // TODO: récupérer tous les clients
         try {
             ArrayList<Reservation> allReservation = (ArrayList<Reservation>) reservationDao.findAll();
             return allReservation;
@@ -76,6 +75,15 @@ public class ReservationService {
         } catch (DaoException e) {
             throw new ServiceException("Une erreur a eu lieu lors de la création de la reservation");
         }
+    }
+
+    public long delete(Reservation reservation) throws ServiceException {
+        try {
+            return this.reservationDao.delete(reservation);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     public long count() throws ServiceException {

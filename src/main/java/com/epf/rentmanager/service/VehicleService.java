@@ -2,6 +2,7 @@ package com.epf.rentmanager.service;
 
 //Importation
 import java.util.List;
+import java.util.Optional;
 
 //exception
 import com.epf.rentmanager.exception.DaoException;
@@ -20,7 +21,7 @@ public class VehicleService {
 	public static VehicleService vehicleInstance;
 	
 	private VehicleService() {
-		this.vehicleDao = VehicleDao.getInstance();
+		this.vehicleDao = VehicleDao.getVehicleInstance();
 	}
 	
 	public static VehicleService getVehicleInstance() {
@@ -31,9 +32,46 @@ public class VehicleService {
 		return vehicleInstance;
 	}
 
+	public List<Vehicle> findAll() throws ServiceException {
+		try {
+			return VehicleDao.getVehicleInstance().findAll(); //cree un nouveau vehicule
+		} catch (DaoException e) {
+			throw new ServiceException("Une erreur a eu lieu lors de la récupération du vehicule");
+		}
+	}
+
+	public Optional<Vehicle> findById(long id) throws ServiceException {
+		try {
+			Optional<Vehicle> vehicle = vehicleDao.findById(id);
+			if (vehicle != null){
+				return vehicle;
+			}
+			throw new ServiceException("Le vehicule n°"+ id + "n'a pas été trouvé dans la base de données");
+		} catch (DaoException e) {
+			throw new ServiceException("Une erreur a eu lieu lors de la récupération du vehicule");
+		}
+	}
+
+	public long create(Vehicle vehicle) throws ServiceException {
+		try {
+			return vehicleDao.create(vehicle);
+		} catch (DaoException e) {
+			throw new ServiceException("Une erreur a eu lieu lors de la création du véhicule");
+		}
+	}
+
 	public long update(Vehicle vehicle, Long id) throws ServiceException {
 		try {
 			return this.vehicleDao.update(vehicle, id);
+		} catch (DaoException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+	public long delete(Vehicle vehicle) throws ServiceException {
+		try {
+			return this.vehicleDao.delete(vehicle);
 		} catch (DaoException e) {
 			e.printStackTrace();
 		}
@@ -47,37 +85,6 @@ public class VehicleService {
 			e.printStackTrace();
 		}
 		return 0;
-	}
-
-	public long create(Vehicle vehicle) throws ServiceException {
-		// TODO: créer un véhicule
-		try {
-			return vehicleDao.create(vehicle);
-		} catch (DaoException e) {
-			throw new ServiceException("Une erreur a eu lieu lors de la création du véhicule");
-		}
-	}
-
-	public Vehicle findById(long id) throws ServiceException {
-		// TODO: récupérer un véhicule par son id
-		try {
-			Vehicle vehicle = vehicleDao.findById(id);
-			if (vehicle != null){
-				return vehicle;
-			}
-			throw new ServiceException("Le vehicule n°"+ id + "n'a pas été trouvé dans la base de données");
-		} catch (DaoException e) {
-			throw new ServiceException("Une erreur a eu lieu lors de la récupération du vehicule");
-		}
-	}
-
-	public List<Vehicle> findAll() throws ServiceException {
-		// TODO: récupérer tous les clients
-		try {
-			return VehicleDao.getInstance().findAll(); //cree un nouveau vehicule
-		} catch (DaoException e) {
-			throw new ServiceException("Une erreur a eu lieu lors de la récupération du vehicule");
-		}
 	}
 	
 }
