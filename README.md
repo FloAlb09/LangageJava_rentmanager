@@ -1,2 +1,2 @@
-# LangageJava_rentmanager
+# rentmanager
 TP : rentmanager
