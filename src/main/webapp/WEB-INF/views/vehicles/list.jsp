@@ -28,15 +28,13 @@
                             <table class="table table-striped">
                                 <tr>
                                     <th style="width: 10px">#</th>
-                                    <th>Marque</th>
-                                    <th>Modele</th>
+                                    <th>Constructeur</th>
                                     <th>Nombre de places</th>
                                     <!--<th>Propriétaire</th>-->
                                     <th>Action</th>
                                 </tr>
-                                <tr>
-
                                 <c:forEach items="${vehicles}" var="vehicle">
+                                <tr>
                                     <td>${vehicle.id}.</td>
                                     <td>${vehicle.constructeur}</td>
                                     <td>${vehicle.nb_places}</td>

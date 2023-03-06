@@ -23,14 +23,15 @@ public class VehicleListServlet extends HttpServlet {
         this.vehicleService = VehicleService.getVehicleInstance();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
         try {
-            request.setAttribute("vehicles", vehicleService.findAll());
+            request.setAttribute("vehicles", VehicleService.getVehicleInstance().findAll());
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/vehicles/list.jsp").forward(request,
+                    response);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
-        //on pousse la ressource de home.jsp: on recupere le ServletContext+chemin jusquau hom.jsp + forward la ressource avec une requete et reponse
-        this.getServletContext().getRequestDispatcher("/WEB-INF/views/vehicles/list.jsp").forward(request, response);
     }
 
 }

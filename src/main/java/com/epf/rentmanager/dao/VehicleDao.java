@@ -78,6 +78,7 @@ public class VehicleDao {
 			PreparedStatement ps = con.prepareStatement(CREATE_VEHICLE_QUERY, Statement.RETURN_GENERATED_KEYS);
 			ps.setString(1, constructeur);
 			ps.setInt(2, nb_places);
+			ps.execute();
 			ResultSet rs = ps.getGeneratedKeys();
 			long id=0;
 			if (rs.next()) {
@@ -91,7 +92,7 @@ public class VehicleDao {
 	}
 
 	public long update(Vehicle vehicle, Long id) throws DaoException {
-		//"UPDATE Vehicule SET constructeur = ?, modele = ?, nb_places = ? WHERE\n" + "id = ?;"
+		//"UPDATE Vehicule SET constructeur = ?, nb_places = ? WHERE\n" + "id = ?;"
 		String constructeur = vehicle.getConstructeur();
 		int nb_places = vehicle.getNb_places();;
 		//renvoie 1 si le update a ete effectue, 0 sinon
