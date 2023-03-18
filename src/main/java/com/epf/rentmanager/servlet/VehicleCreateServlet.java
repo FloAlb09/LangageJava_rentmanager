@@ -11,16 +11,20 @@ import java.io.IOException;
 
 import com.epf.rentmanager.modele.Vehicle;
 import com.epf.rentmanager.service.VehicleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 @WebServlet("/cars/create")
 public class VehicleCreateServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    public static VehicleService vehicleInstance;
-    private VehicleService vehicleService;
+    @Autowired
+    VehicleService vehicleService;
 
-    public VehicleCreateServlet() {
-        this.vehicleService = VehicleService.getVehicleInstance();
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
 
@@ -32,11 +36,11 @@ public class VehicleCreateServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // traitement du formulaire (appel à la méthode de sauvegarde)
         String constructeur = request.getParameter("manufacturer");
-        String nbPlaceString = request.getParameter("seats");
-        int nbPlace = Integer.parseInt(nbPlaceString);
-        Vehicle vehicle = new Vehicle(constructeur, nbPlace);
+        String nb_place_string = request.getParameter("seats");
+        int nb_place = Integer.parseInt(nb_place_string);
+        Vehicle vehicle = new Vehicle(constructeur, nb_place);
         try {
-            request.setAttribute("vehicles", VehicleService.getVehicleInstance().create(vehicle));
+            request.setAttribute("vehicles", vehicleService.create(vehicle));
         } catch (ServiceException e) {
             e.printStackTrace();
         }

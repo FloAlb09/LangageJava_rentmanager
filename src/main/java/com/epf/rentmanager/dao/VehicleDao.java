@@ -1,29 +1,29 @@
 package com.epf.rentmanager.dao;
+import com.epf.rentmanager.modele.Vehicle;
+import com.epf.rentmanager.persistence.ConnectionManager;
+import com.epf.rentmanager.exception.DaoException;
 
-//Importation
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.Optional;
 
-//exception
-import com.epf.rentmanager.exception.DaoException;
-//modele
-import com.epf.rentmanager.modele.Vehicle;
-//persistence
-import com.epf.rentmanager.persistence.ConnectionManager;
+import org.springframework.stereotype.Repository;
 
-//Classe
+
+
+
+@Repository
 public class VehicleDao {
-	
-	private static VehicleDao vehicleInstance = null;
-	private VehicleDao() {}
-	public static VehicleDao getVehicleInstance() {
-		if(vehicleInstance == null) {
-			vehicleInstance = new VehicleDao();
-		}
-		return vehicleInstance;
+
+	private VehicleDao() {
+
 	}
 
 	private static final String FIND_VEHICLES_QUERY = "SELECT id, constructeur, nb_places FROM Vehicle;";
@@ -35,7 +35,7 @@ public class VehicleDao {
 
 	public List<Vehicle> findAll() throws DaoException {
 		//"SELECT id, constructeur, nb_places FROM Vehicle;"
-		ArrayList<Vehicle> listVehicle = new ArrayList<Vehicle>();
+		ArrayList<Vehicle> listVehicle = new ArrayList<>();
 		try (Connection con = ConnectionManager.getConnection()) {
 			PreparedStatement ps = con.prepareStatement(FIND_VEHICLES_QUERY);
 			//ResultSet : execution d'une requete → objet creer pour recuperer la donnee d'un database grace a jdbc → tableau de donnees avec un curseur (quelle ligne de donnees on lit)
@@ -55,14 +55,14 @@ public class VehicleDao {
 	}
 
 	public Optional<Vehicle> findById(long id) throws DaoException {
-		//"SELECT id, constructeur, nb_places FROM Vehicle WHERE id=?;"
 		try (Connection con = ConnectionManager.getConnection()) {
 			PreparedStatement ps = con.prepareStatement(FIND_VEHICLE_QUERY);
 			ps.setLong(1, id);
 			ResultSet rs = ps.executeQuery();
+			rs.next();
 			String constructeur = rs.getString("constructeur");
 			int nb_places = rs.getInt("nb_places");
-			Vehicle vehicle =new Vehicle(id, constructeur, nb_places);
+			Vehicle vehicle =new Vehicle(constructeur, nb_places);
 			return Optional.of(vehicle);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class VehicleDao {
 	public long update(Vehicle vehicle, Long id) throws DaoException {
 		//"UPDATE Vehicule SET constructeur = ?, nb_places = ? WHERE\n" + "id = ?;"
 		String constructeur = vehicle.getConstructeur();
-		int nb_places = vehicle.getNb_places();;
+		int nb_places = vehicle.getNb_places();
 		//renvoie 1 si le update a ete effectue, 0 sinon
 		try (Connection con = ConnectionManager.getConnection()) { //connexion a un SGBD - creer l'objet de connexion
 			//creer l'objet preparedStatement

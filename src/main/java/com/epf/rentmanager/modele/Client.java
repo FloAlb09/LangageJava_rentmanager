@@ -1,21 +1,17 @@
 package com.epf.rentmanager.modele;
 
-//Importation
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Month;
-import java.util.Date;
+import java.util.Calendar;
 
-//Classe
 public class Client {
-    //attributs
     private Long id;
     private String nom;
     private String prenom;
     private String email;
     private LocalDate naissance;
 
-    //constructeurs
-        //vide
     public Client(){
         this.id = 0L;
         this.nom = "Albertoli";
@@ -23,7 +19,6 @@ public class Client {
         this.email = "florane.albertoli@epfedu.fr";
         this.naissance = LocalDate.of(2001, Month.NOVEMBER, 9);
     }
-        //par defaut
     public Client(Long id, String nom, String prenom, String email, LocalDate naissance) {
         this.id = id;
         this.nom = nom;
@@ -31,12 +26,16 @@ public class Client {
         this.email = email;
         this.naissance = naissance;
     }
-        //sans id
     public Client(String nom, String prenom, String email, LocalDate naissance) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.naissance = naissance;
+    }
+    public Client(String nom, String prenom, String email) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
     }
 
     //getter and setter
@@ -74,12 +73,23 @@ public class Client {
     //methode toString()
     @Override
     public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", nom='" + nom + '\'' +
-                ", prenom='" + prenom + '\'' +
-                ", email='" + email + '\'' +
-                ", naissance=" + naissance +
-                '}';
+        return "Nom : " + nom +
+                ", Prenom : " + prenom +
+                ", Email : " + email +
+                ", Naissance : " + naissance;
+    }
+
+    public static int getAge(LocalDate naissance)
+    {
+        Calendar curr = Calendar.getInstance();
+        Calendar birth = Calendar.getInstance();
+        birth.setTime(Date.valueOf(naissance));
+        int yeardiff = curr.get(Calendar.YEAR) - birth.get(Calendar.YEAR);
+        curr.add(Calendar.YEAR,-yeardiff);
+        if(birth.after(curr))
+        {
+            yeardiff = yeardiff - 1;
+        }
+        return yeardiff;
     }
 }

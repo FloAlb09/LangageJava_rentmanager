@@ -1,30 +1,27 @@
 package com.epf.rentmanager.dao;
+import com.epf.rentmanager.exception.DaoException;
+import com.epf.rentmanager.modele.Client;
+import com.epf.rentmanager.persistence.ConnectionManager;
 
-//Importation
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
-//exception
-import com.epf.rentmanager.exception.DaoException;
-//modele
-import com.epf.rentmanager.modele.Client;
-//persistence
-import com.epf.rentmanager.persistence.ConnectionManager;
+import org.springframework.stereotype.Repository;
 
-//Classe
+@Repository
 public class ClientDao {
 	
-	private static ClientDao clientInstance = null;
-	private ClientDao() {}
-	public static ClientDao getClientInstance() {
-		if(clientInstance == null) {
-			clientInstance = new ClientDao();
-		}
-		return clientInstance;
+	private ClientDao(){
+
 	}
 
 	private static final String FIND_CLIENTS_QUERY = "SELECT id, nom, prenom, email, naissance FROM Client;";
@@ -87,8 +84,6 @@ public class ClientDao {
 		try (Connection con = ConnectionManager.getConnection()) { //connection à un SGBD - creation de l'objet connexion
 			//auto-generated keys feature provides a way to retrieve values from columns that are part of an index or have a default value assigned
 			PreparedStatement ps = con.prepareStatement(CREATE_CLIENT_QUERY, Statement.RETURN_GENERATED_KEYS); //creation de l'objet prepared statement
-			//Récupèrer les éléments
-			ResultSet rs = ps.getGeneratedKeys();
 			//Extraction des donnees
 			ps.setString(1, nom); //specifie le premier parametre de la requete - definit la valeur String du nom du client sur l'index 1 du parametre donne
 			ps.setString(2, prenom); //specifie le deuxieme parametre de la requete - definit la valeur String du prenom du client sur l'index 2 du parametre donne
@@ -96,6 +91,8 @@ public class ClientDao {
 			//convertir un objet de type LocalDate en un objet de type Date
 			ps.setDate(4, naissance); //specifie le quatrieme parametre de la requete -  - definit la valeur LocalDate de la date de naissance du client sur l'index 4 du parametre donne
 			//Recupere toutes les cles generees automatiquement du fait de l'execution de cet objet SQLServerStatement
+			ps.execute();
+			ResultSet rs = ps.getGeneratedKeys();
 			long id=0;
 			//parcourt des enregistrements que la table ResultSet
 			if (rs.next()) { //deplace le curseur sur la ligne suivante a partir de la position actuelle

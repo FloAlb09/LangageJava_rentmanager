@@ -1,24 +1,28 @@
 package com.epf.rentmanager.main;
 
-import com.epf.rentmanager.exception.ServiceException;
-import com.epf.rentmanager.modele.Client;
-import com.epf.rentmanager.modele.Reservation;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
 
-public class Main {
-    public static void main (String[] args){
-        try {
-            Client client = new Client();
-            //System.out.println(ClientService.getInstance().findById(1));
-            //System.out.println(ClientService.getInstance().count());
-            //System.out.println(ClientService.getInstance().update(client,0L));
-            //System.out.println(VehicleService.getInstance().findById(2));
-            System.out.println(ReservationService.getReservationInstance().count());
-            //System.out.println(ReservationService.getReservationInstance().findResaByClientId());
+import com.epf.rentmanager.configuration.AppConfiguration;
 
+public class Main {
+
+    public static void main(String[] args) {
+        ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class);
+        ClientService clientService = context.getBean(ClientService.class);
+        VehicleService vehicleService = context.getBean(VehicleService.class);
+        ReservationService reservationService = context.getBean(ReservationService.class);
+
+        /*try {
+            System.out.println(vehicleService.findAll());
+            System.out.println(clientService.findAll());
+            System.out.println(reservationService.findAll());
         } catch (ServiceException e) {
-            throw new RuntimeException(e);
-        }
+            e.printStackTrace();
+        }*/
     }
 }

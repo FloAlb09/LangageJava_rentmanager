@@ -1,6 +1,5 @@
 package com.epf.rentmanager.modele;
 
-//Classe
 public class Vehicle {
     //attributs
     private Long id;
@@ -47,10 +46,7 @@ public class Vehicle {
 
     @Override
     public String toString() {
-        return "Vehicle{" +
-                "id=" + id +
-                ", constructeur='" + constructeur + '\'' +
-                ", nb_places=" + nb_places +
-                '}';
+        return "Constructeur : " + constructeur +
+                ", Nombre de places : " + nb_places;
     }
 }
