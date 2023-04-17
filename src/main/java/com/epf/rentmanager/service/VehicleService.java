@@ -76,4 +76,24 @@ public class VehicleService {
 		}
 		return 0;
 	}
+
+	public List<Vehicle> findVehicleByUser(long client_id) throws ServiceException {
+		try{
+			return this.vehicleDao.findVehicleByUser(client_id);
+		}catch (DaoException e){
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public long countVehicleByUser(long client_id) throws ServiceException {
+		try {
+			return this.vehicleDao.countVehicleByUser(client_id);
+		} catch (DaoException e) {
+			e.printStackTrace();
+		}
+		return 0;
+	}
+
+
 }

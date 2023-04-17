@@ -12,7 +12,7 @@ public class VehicleValidator {
      * @param vehicle L'instance d'utilisateur à tester
      * @return Resultat du test (>= 18 ans)
      */
-    public static boolean isLegal(Vehicle vehicle) {
-
-    }
+//    public static boolean isReserved(Vehicle vehicle) {
+//
+//    }
 }

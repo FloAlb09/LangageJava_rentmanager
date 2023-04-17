@@ -26,6 +26,13 @@ public class Client {
         this.email = email;
         this.naissance = naissance;
     }
+    public Client(Long id, String nom, String prenom, String email) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.naissance = naissance;
+    }
     public Client(String nom, String prenom, String email, LocalDate naissance) {
         this.nom = nom;
         this.prenom = prenom;

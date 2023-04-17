@@ -3,6 +3,7 @@ package com.epf.rentmanager.validator;
 import com.epf.rentmanager.modele.Client;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Component
@@ -36,6 +37,16 @@ public class ClientValidator {
         }
         return emailUsed;
     }
+
+    public static boolean ageValidator(LocalDate birthDate) {
+        boolean bool = false;
+        int age = LocalDate.now().getYear() - birthDate.getYear();
+        if (age > 19 && age < 150) {
+            bool = true;
+        }
+        return bool;
+    }
+
 
     /**
      * Renvoie true si l'utilisateur passe en parametre a un nom >= 3 caracteres

@@ -34,7 +34,7 @@
                                     <th>Naissance</th>
                                     <th>Action</th>
                                 </tr>
-                                <c:forEach items="${users}" var="user">
+                                <c:forEach items="${listUsers}" var="user">
                                 <tr>
                                     <td>${user.id}</td>
                                     <td>${user.nom}</td>
@@ -42,15 +42,20 @@
                                     <td>${user.email}</td>
                                      <td>${user.naissance}</td>
                                     <td>
-                                        <a class="btn btn-primary" href="${pageContext.request.contextPath}/users/details?id=1">
-                                        <i class="fa fa-play"></i>
-                                        </a>
-                                        <a class="btn btn-success disabled" href="#">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        <a class="btn btn-danger disabled" href="#">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
+                                        <form method="post">
+                                            <button type="submit" name="detailClient"
+                                                value="${user.id}" class="btn btn-primary">
+                                                <i class="fa fa-play"></i>
+                                            </button>
+                                            <button type="submit" name="updateClient"
+                                                value="${user.id}" class="btn btn-success">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="submit" name="deleteClient"
+                                                value="${user.id}" class="btn btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 </c:forEach>

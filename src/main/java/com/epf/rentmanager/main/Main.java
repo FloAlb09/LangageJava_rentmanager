@@ -1,5 +1,7 @@
 package com.epf.rentmanager.main;
 
+import com.epf.rentmanager.exception.ServiceException;
+import com.epf.rentmanager.modele.Client;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -17,12 +19,12 @@ public class Main {
         VehicleService vehicleService = context.getBean(VehicleService.class);
         ReservationService reservationService = context.getBean(ReservationService.class);
 
-        /*try {
-            System.out.println(vehicleService.findAll());
-            System.out.println(clientService.findAll());
-            System.out.println(reservationService.findAll());
-        } catch (ServiceException e) {
-            e.printStackTrace();
-        }*/
+//        try {
+//            System.out.println("FindVehicleByUser");
+//            long client_id = 1;
+//            System.out.println(vehicleService.findVehicleByUser(client_id));
+//        } catch (ServiceException e) {
+//            e.printStackTrace();
+//        }
     }
 }

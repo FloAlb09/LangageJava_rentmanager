@@ -1,6 +1,5 @@
 package com.epf.rentmanager.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.epf.rentmanager.dao.ReservationDao;
@@ -34,6 +33,7 @@ public class ReservationService {
         }
         return null;
     }
+
     public List<Reservation> findResaByVehicle(long vehicle_id) throws ServiceException {
         try {
             return this.reservationDao.findResaByVehicleId(vehicle_id);
@@ -42,6 +42,7 @@ public class ReservationService {
         }
         return null;
     }
+
     public long create(Reservation reservation) throws ServiceException {
         try {
             return this.reservationDao.create(reservation);
@@ -61,6 +62,15 @@ public class ReservationService {
         try {
             return this.reservationDao.count();
         } catch (DaoException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public long countResaByUser(long client_id) throws ServiceException{
+        try {
+            return this.reservationDao.countResaByUser(client_id);
+        }catch (DaoException e){
             e.printStackTrace();
         }
         return 0;

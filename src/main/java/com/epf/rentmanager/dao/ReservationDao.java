@@ -1,6 +1,7 @@
 package com.epf.rentmanager.dao;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.modele.Reservation;
+import com.epf.rentmanager.modele.Vehicle;
 import com.epf.rentmanager.persistence.ConnectionManager;
 
 import java.sql.Connection;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
@@ -29,7 +31,9 @@ public class ReservationDao {
     private static final String CREATE_RESERVATION_QUERY = "INSERT INTO Reservation(client_id, vehicle_id, debut, fin) VALUES(?, ?, ?, ?);";
     private static final String DELETE_RESERVATION_QUERY = "DELETE FROM Reservation WHERE id=?;";
     private static final String COUNT_RESERVATIONS_QUERY = "SELECT COUNT(id) AS count FROM Reservation;";
+    private static final String UPDATE_RESERVATION_QUERY = "UPDATE Reservation SET client_id=?, vehicle_id=?, debut=?, fin=? WHERE id=?";
 
+    private static final String COUNT_RESERVATIONS_BY_USER_QUERY = "SELECT COUNT(*) FROM Reservation INNER JOIN Vehicle ON Reservation.vehicle_id = Vehicle.id WHERE client_id=?;";
     public List<Reservation> findAll() throws DaoException {
         ArrayList<Reservation> listReservation = new ArrayList<>();
         try (Connection con = ConnectionManager.getConnection()) {
@@ -140,4 +144,35 @@ public class ReservationDao {
         return 0;
     }
 
+    public long update(Reservation reservation, Long id) throws DaoException {
+        long client_id = reservation.getClient_id();
+        long vehicle_id = reservation.getVehicle_id();
+        LocalDate debut = reservation.getDebut();
+        LocalDate fin = reservation.getFin();
+        try (Connection con = ConnectionManager.getConnection()) {
+            PreparedStatement ps = con.prepareStatement(UPDATE_RESERVATION_QUERY);
+            ps.setLong(1, client_id);
+            ps.setLong(2, vehicle_id);
+            ps.setDate(3, Date.valueOf(debut));
+            ps.setDate(4, Date.valueOf(fin));
+            ps.setLong(5, id);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public long countResaByUser(long client_id) throws DaoException {
+        try (Connection con = ConnectionManager.getConnection()) {
+            PreparedStatement ps = con.prepareStatement(COUNT_RESERVATIONS_BY_USER_QUERY);
+            ps.setLong(1,client_id);
+            ResultSet rs = ps.executeQuery();
+            rs.last();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }
