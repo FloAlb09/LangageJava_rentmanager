@@ -20,7 +20,7 @@ public class VehicleDao {
     private static final String FIND_VEHICLES_QUERY = "SELECT id, constructeur, nb_places FROM Vehicle;";
     private static final String FIND_VEHICLE_QUERY = "SELECT id, constructeur, nb_places FROM Vehicle WHERE id=?;";
     private static final String CREATE_VEHICLE_QUERY = "INSERT INTO Vehicle(constructeur, nb_places) VALUES(?, ?);";
-    private static final String UPDATE_VEHICLE_QUERY = "UPDATE Vehicule SET constructeur = ?, nb_places = ? WHERE\n" + "id = ?;";
+    private static final String UPDATE_VEHICLE_QUERY = "UPDATE Vehicle SET constructeur = ?, nb_places = ? WHERE\n" + "id = ?;";
     private static final String DELETE_VEHICLE_QUERY = "DELETE FROM Vehicle WHERE id=?;";
     private static final String COUNT_VEHICLES_QUERY = "SELECT COUNT(id) AS count FROM Vehicle;";
     private static final String FIND_VEHICLE_BY_USER_QUERY = "SELECT DISTINCT Vehicle.id, Vehicle.constructeur, Vehicle.nb_places FROM Vehicle INNER JOIN Reservation ON Reservation.vehicle_id = Vehicle.id WHERE client_id=?;";

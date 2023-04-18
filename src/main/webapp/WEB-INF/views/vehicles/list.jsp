@@ -34,22 +34,27 @@
                                     <th>Action</th>
                                 </tr>
                                 <c:forEach items="${vehicles}" var="vehicle">
-                                <tr>
-                                    <td>${vehicle.id}.</td>
-                                    <td>${vehicle.constructeur}</td>
-                                    <td>${vehicle.nb_places}</td>
-                                    <td>
-                                        <a class="btn btn-primary disabled" href="car-detail.html">
-                                            <i class="fa fa-play"></i>
-                                        </a>
-                                        <a class="btn btn-success disabled" href="#">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        <a class="btn btn-danger disabled" href="#">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td>${vehicle.id}.</td>
+                                        <td>${vehicle.constructeur}</td>
+                                        <td>${vehicle.nb_places}</td>
+                                        <td>
+                                            <form method="post">
+                                                <button type="submit" name="detailVehicle"
+                                                    value="${vehicle.id}" class="btn btn-primary">
+                                                    <i class="fa fa-play"></i>
+                                                </button>
+                                                    <button type="submit" name="updateVehicle"
+                                                    value="${vehicle.id}" class="btn btn-success">
+                                                    <i class="fa fa-edit"></i>
+                                                </button>
+                                                    <button type="submit" name="deleteVehicle"
+                                                    value="${vehicle.id}" class="btn btn-danger">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
                                 </c:forEach>
                             </table>
                         </div>

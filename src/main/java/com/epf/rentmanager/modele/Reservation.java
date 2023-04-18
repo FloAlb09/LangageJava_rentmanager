@@ -9,20 +9,28 @@ public class Reservation {
     private Long id;
     private Client client;
     private Long client_id;
+    private String client_nom;
+    private String client_email;
     private Vehicle vehicle;
     private Long vehicle_id;
     private LocalDate debut;
     private LocalDate fin;
 
-    //constructeurs
-        //vide
         public Reservation(long id, Client client, long client_id, Vehicle vehicle, long vehicle_id, LocalDate debut, LocalDate fin) {
         }
-        //par defaut
+
     public Reservation(Long id, Long client_id, Long vehicle_id, LocalDate debut, LocalDate fin) {
         this.id = id;
         this.client_id = client_id;
         this.vehicle_id = vehicle_id;
+        this.debut = debut;
+        this.fin = fin;
+    }
+
+    public Reservation(Long id, String client_nom, String client_email, LocalDate debut, LocalDate fin) {
+        this.id = id;
+        this.client_nom = client_nom;
+        this.client_email = client_email;
         this.debut = debut;
         this.fin = fin;
     }
@@ -84,6 +92,22 @@ public class Reservation {
     }
     public void setFin(LocalDate fin) {
         this.fin = fin;
+    }
+
+    public String getClient_nom() {
+        return client_nom;
+    }
+
+    public void setClient_nom(String client_nom) {
+        this.client_nom = client_nom;
+    }
+
+    public String getClient_email() {
+        return client_email;
+    }
+
+    public void setClient_email(String client_email) {
+        this.client_email = client_email;
     }
 
     //methode to_string

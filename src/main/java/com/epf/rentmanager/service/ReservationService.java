@@ -75,4 +75,13 @@ public class ReservationService {
         }
         return 0;
     }
+
+    public long countResaByVehicle(long vehicle_id) throws ServiceException{
+        try {
+            return this.reservationDao.countResaByVehicle(vehicle_id);
+        }catch (DaoException e){
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }
