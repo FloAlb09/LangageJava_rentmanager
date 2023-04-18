@@ -28,10 +28,6 @@ public class ReservationListServlet extends HttpServlet{
     private static final long serialVersionUID = 1L;
     @Autowired
     ReservationService reservationService;
-    @Autowired
-    ClientService clientService;
-    @Autowired
-    VehicleService vehicleService;
 
     @Override
     public void init() throws ServletException {
@@ -39,31 +35,46 @@ public class ReservationListServlet extends HttpServlet{
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
+    @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            List<Reservation> listReservations = reservationService.findAll();
-            System.out.println("listReservations: " + listReservations);
-            List<Reservation> listReservationsFormated = new ArrayList<>();
-            for (Reservation reservation : listReservations){
-                System.out.println("Reservation: " + reservation);
-                System.out.println("reservation.getClient_id: "+ reservation.getClient_id());
-                System.out.println("reservation.getClient_id: "+ reservation.getVehicle_id());
-                System.out.println(reservation.getVehicle_id());
-                Client client = clientService.findById(reservation.getClient_id());
-                System.out.println("Client: "+client);
-                Vehicle vehicle = vehicleService.findById(reservation.getVehicle_id());
-                System.out.println("Vehicle:" + vehicle);
-                long id = reservation.getId();
-                LocalDate debut = reservation.getDebut();
-                LocalDate fin = reservation.getFin();
-                listReservationsFormated.add(new Reservation(id, client, vehicle, debut, fin));
-                System.out.println("listReservationFormated" + listReservationsFormated);
-            }
-            request.setAttribute("rents", listReservationsFormated);
-            this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/list.jsp").forward(request,response);
+            request.setAttribute("listReservations", reservationService.findInfoAll());
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/list.jsp").forward(request, response);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
     }
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String reservation_id_string_delete = request.getParameter("deleteReservation");
+        System.out.println("reservation_id_string_delete" + reservation_id_string_delete);
+        if (reservation_id_string_delete != null) {
+            long reservation_id_delete = Long.parseLong(reservation_id_string_delete);
+            System.out.println("reservation_id_delete" + reservation_id_delete);
+            Reservation reservationDelete = new Reservation(reservation_id_delete, null, null, null, null);
+            try {
+                reservationService.delete(reservationDelete);
+            } catch (ServiceException e) {
+                e.printStackTrace();
+            }
+            response.sendRedirect("/rentmanager/rents");
+        }
+
+        String reservation_id_string_update = request.getParameter("updateReservation");
+        if (reservation_id_string_update != null) {
+            long reservation_id_update = Long.parseLong(reservation_id_string_update);
+            ReservationUpdateServlet.recupIdReservation(reservation_id_update);
+            response.sendRedirect("/rentmanager/rents/update");
+        }
+
+        String reservation_id_string_detail = request.getParameter("detailReservation") ;
+        if (reservation_id_string_detail != null) {
+            long reservation_id_detail = Long.parseLong(reservation_id_string_detail);
+            ReservationDetailServlet.recupIdReservation(reservation_id_detail);
+            response.sendRedirect("/rentmanager/rents/details");
+        }
+    }
 }
+

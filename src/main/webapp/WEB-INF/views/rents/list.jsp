@@ -34,23 +34,28 @@
                                     <th>Fin</th>
                                     <th>Action</th>
                                 </tr>
-                                <c:forEach items="${rents}" var="rent">
+                                <c:forEach items="${listReservations}" var="reservations">
                                 <tr>
-                                    <td>${rent.id}</td>
-                                    <td>${rent.vehicle}</td>
-                                    <td>${rent.client}</td>
-                                    <td>${rent.debut}</td>
-                                    <td>${rent.fin}</td>
+                                    <td>${reservations.id}</td>
+                                    <td>${reservations.vehicle_constructeur}</td>
+                                    <td>${reservations.client_nom}</td>
+                                    <td>${reservations.debut}</td>
+                                    <td>${reservations.fin}</td>
                                     <td>
-                                        <a class="btn btn-primary disabled" href="${pageContext.request.contextPath}/cars?id=1">
-                                            <i class="fa fa-play"></i>
-                                        </a>
-                                        <a class="btn btn-success disabled" href="#">
-                                            <i class="fa fa-edit"></i>
-                                        </a>
-                                        <a class="btn btn-danger disabled" href="#">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
+                                        <form method="post">
+                                            <button type="submit" name="detailReservation"
+                                                value="${reservations.id}" class="btn btn-primary">
+                                                <i class="fa fa-play"></i>
+                                            </button>
+                                            <button type="submit" name="updateReservation"
+                                                value="${reservations.id}" class="btn btn-success">
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button type="submit" name="deleteReservation"
+                                                value="${reservations.id}" class="btn btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 </c:forEach>

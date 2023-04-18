@@ -7,7 +7,9 @@ import com.epf.rentmanager.dao.ReservationDao;
 import com.epf.rentmanager.exception.DaoException;
 import com.epf.rentmanager.exception.ServiceException;
 
+import com.epf.rentmanager.modele.Client;
 import com.epf.rentmanager.modele.Reservation;
+import com.epf.rentmanager.modele.Vehicle;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -84,4 +86,33 @@ public class ReservationService {
         }
         return 0;
     }
+
+    public Reservation findById(long id) throws ServiceException {
+        try {
+            return this.reservationDao.findById(id).get();
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Reservation> findInfoAll() throws ServiceException {
+        try {
+            return this.reservationDao.findInfoAll();
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public long update(Reservation reservation, Long id) throws ServiceException {
+        try {
+            return this.reservationDao.update(reservation, id);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+
 }
