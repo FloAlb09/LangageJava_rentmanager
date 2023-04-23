@@ -16,7 +16,7 @@ public class ClientValidator {
         String emailClientCreate = clientCreate.getEmail();
         for (Client clientExisting : listClients) {
             String emailClientExisting = clientExisting.getEmail();
-            if (emailClientCreate == emailClientExisting) {
+            if (emailClientCreate.equals(emailClientExisting)) {
                 emailUsed = true;
                 break;
             }
