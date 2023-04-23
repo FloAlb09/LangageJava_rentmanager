@@ -1,7 +1,10 @@
 package com.epf.rentmanager.modele;
 
 //Importation
+import java.sql.Date;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 
 //Classe
 public class Reservation {
@@ -145,5 +148,10 @@ public class Reservation {
                 ", debut=" + debut +
                 ", fin=" + fin +
                 '}';
+    }
+
+    public long reservationTime(LocalDate debut, LocalDate fin) {
+        long differenceInDays = ChronoUnit.DAYS.between(fin, debut);
+        return differenceInDays;
     }
 }

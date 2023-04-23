@@ -34,16 +34,20 @@ public class VehicleCreateServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // traitement du formulaire (appel à la méthode de sauvegarde)
-        String constructeur = request.getParameter("manufacturer");
-        String nb_place_string = request.getParameter("seats");
-        int nb_place = Integer.parseInt(nb_place_string);
-        Vehicle vehicle = new Vehicle(constructeur, nb_place);
         try {
-            request.setAttribute("vehicles", vehicleService.create(vehicle));
-        } catch (ServiceException e) {
-            e.printStackTrace();
+            Integer.parseInt(request.getParameter("action"));
+            String constructeur = request.getParameter("manufacturer");
+            String nb_place_string = request.getParameter("seats");
+            int nb_place = Integer.parseInt(nb_place_string);
+            Vehicle vehicle = new Vehicle(constructeur, nb_place);
+            try {
+                request.setAttribute("vehicles", vehicleService.create(vehicle));
+            } catch (ServiceException e) {
+                e.printStackTrace();
+            }
+            response.sendRedirect("/rentmanager/cars");
+        } catch (NumberFormatException e) {
+            response.sendRedirect("/rentmanager/users");
         }
-        response.sendRedirect("/rentmanager/cars");
     }
 }

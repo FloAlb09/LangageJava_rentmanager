@@ -54,7 +54,7 @@
                                     <label for="begin" class="col-sm-2 control-label">Date de debut</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="begin" name="begin" required
+                                        <input type="text" class="form-control" id="begin" name="begin"
                                                data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
                                     </div>
                                 </div>
@@ -62,14 +62,15 @@
                                     <label for="end" class="col-sm-2 control-label">Date de fin</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="end" name="end" required
+                                        <input type="text" class="form-control" id="end" name="end"
                                                data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
                                     </div>
                                 </div>
                             </div>
                             <!-- /.box-body -->
                             <div class="box-footer">
-                                <button type="submit" class="btn btn-info pull-right">Ajouter</button>
+                                <button type="submit" name="action" value="1" class="btn btn-info pull-right">Ajouter</button>
+                                <button type="submit" name="action" value="" class="btn btn-danger pull-right">Annuler</button>
                             </div>
                             <!-- /.box-footer -->
                         </form>
@@ -81,19 +82,10 @@
         </section>
         <!-- /.content -->
     </div>
-
     <%@ include file="/WEB-INF/views/common/footer.jsp" %>
 </div>
 <!-- ./wrapper -->
-
 <%@ include file="/WEB-INF/views/common/js_imports.jsp" %>
-<script src="${pageContext.request.contextPath}/resources/plugins/input-mask/jquery.inputmask.js"></script>
-<script src="${pageContext.request.contextPath}/resources/plugins/input-mask/jquery.inputmask.date.extensions.js"></script>
-<script src="${pageContext.request.contextPath}/resources/plugins/input-mask/jquery.inputmask.extensions.js"></script>
-<script>
-    $(function () {
-        $('[data-mask]').inputmask()
-    });
 </script>
 </body>
 </html>

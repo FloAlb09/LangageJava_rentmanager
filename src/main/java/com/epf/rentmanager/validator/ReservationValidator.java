@@ -27,4 +27,32 @@ public class ReservationValidator {
         return bool;
     }
 
+    public static boolean isVehicleReservedTwoTimesSamesDay(long reservation_id, long vehicle_id, List<Reservation> listReservation, LocalDate debut) {
+        boolean bool = false;
+        for (Reservation reservation : listReservation){
+            LocalDate debutR = reservation.getDebut();
+            if ((reservation.getId() != reservation_id) && (reservation.getVehicle_id() == vehicle_id) && (reservation.getDebut() == debutR)){
+                bool = true;
+            }
+        }
+        return bool;
+    }
+
+    public static boolean isVehicleReservedMoreThanSevenDaysBySameClient(Reservation reservation, long vehicle_id, long client_id, LocalDate debut, LocalDate fin) {
+        boolean bool = false;
+            if ((reservation.reservationTime(debut, fin) > 7) && (reservation.getVehicle_id() == vehicle_id) && (reservation.getClient_id() == client_id)){
+                bool = true;
+            }
+        return bool;
+    }
+
+    public static boolean isVehicleReservedMoreThanThirtyDays(Reservation reservation, long vehicle_id, long client_id, LocalDate debut, LocalDate fin) {
+        boolean bool = false;
+        if ((reservation.reservationTime(debut, fin) > 30) && (reservation.getVehicle_id() == vehicle_id)){
+            bool = true;
+        }
+        return bool;
+    }
+
+
 }

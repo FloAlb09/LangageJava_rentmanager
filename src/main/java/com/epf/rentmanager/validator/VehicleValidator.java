@@ -1,18 +1,22 @@
 package com.epf.rentmanager.validator;
 
-import com.epf.rentmanager.modele.Client;
 import com.epf.rentmanager.modele.Vehicle;
 import org.springframework.stereotype.Component;
 
 @Component
 public class VehicleValidator {
-    /**
-     * Renvoie true si le vehicule n'est pas reserve ce jour
-     *
-     * @param vehicle L'instance d'utilisateur à tester
-     * @return Resultat du test (>= 18 ans)
-     */
-//    public static boolean isReserved(Vehicle vehicle) {
-//
-//    }
+    public static boolean isConstructorEmpty(Vehicle vehicle) {
+        boolean bool = false;
+        if (vehicle.getConstructeur()== null){
+            bool = true;
+        }
+        return bool;
+    }
+    public static boolean isNb_placesBetweenTwoAndNine(Vehicle vehicle) {
+        boolean bool = false;
+        if ((vehicle.getNb_places()>2) && (vehicle.getNb_places()<9)){
+            bool = true;
+        }
+        return bool;
+    }
 }

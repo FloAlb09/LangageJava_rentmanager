@@ -40,36 +40,40 @@ public class ReservationCreateServlet extends HttpServlet {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
 
-            try {
-                request.setAttribute("listVehiclesReservation", vehicleService.findAll());
-                request.setAttribute("listClientsReservation", clientService.findAll());
-            } catch (ServiceException e) {
-                e.printStackTrace();
-            }
+        try {
+            request.setAttribute("listVehiclesReservation", vehicleService.findAll());
+            request.setAttribute("listClientsReservation", clientService.findAll());
+        } catch (ServiceException e) {
+            e.printStackTrace();
+        }
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/create.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String client_id_string = request.getParameter("client");
-        String vehicle_id_string = request.getParameter("car");
-        String debut_string = request.getParameter("begin");
-        String fin_string = request.getParameter("end");
-        long client_id = Long.parseLong(client_id_string);
-        long vehicle_id = Long.parseLong(vehicle_id_string);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate debut = LocalDate.parse(debut_string, formatter);
-        LocalDate fin = LocalDate.parse(fin_string, formatter);
-
-        Reservation reservation = new Reservation(client_id, vehicle_id, debut, fin);
         try {
-            request.setAttribute("reservations", reservationService.create(reservation));
-        } catch (ServiceException e) {
-            e.printStackTrace();
+            Integer.parseInt(request.getParameter("action"));
+            String client_id_string = request.getParameter("client");
+            String vehicle_id_string = request.getParameter("car");
+            String debut_string = request.getParameter("begin");
+            String fin_string = request.getParameter("end");
+            long client_id = Long.parseLong(client_id_string);
+            long vehicle_id = Long.parseLong(vehicle_id_string);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate debut = LocalDate.parse(debut_string, formatter);
+            LocalDate fin = LocalDate.parse(fin_string, formatter);
+
+            Reservation reservation = new Reservation(client_id, vehicle_id, debut, fin);
+            try {
+                request.setAttribute("reservations", reservationService.create(reservation));
+            } catch (ServiceException e) {
+                e.printStackTrace();
+            }
+            response.sendRedirect("/rentmanager/rents");
+        } catch (NumberFormatException e) {
+            response.sendRedirect("/rentmanager/users");
         }
-        response.sendRedirect("/rentmanager/rents");
     }
 }
