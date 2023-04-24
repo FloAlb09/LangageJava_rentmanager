@@ -13,7 +13,7 @@ public class ReservationValidator {
     @Autowired
     ReservationService reservationService;
 
-    public static boolean dateValidator(long reservation_id, List<Reservation> listReservation, LocalDate debut, LocalDate fin) {
+    public static boolean isVehicleReservedTwoTimesSamesDay(long reservation_id, List<Reservation> listReservation, LocalDate debut, LocalDate fin) {
         boolean bool = true;
         for (Reservation reservation : listReservation) {
             LocalDate debutR = reservation.getDebut();
@@ -22,17 +22,6 @@ public class ReservationValidator {
                     || (fin.isAfter(debutR) && fin.isBefore(finR)) || (debut.isBefore(debutR) && fin.isAfter(finR))) {
                 bool = false;
                 break;
-            }
-        }
-        return bool;
-    }
-
-    public static boolean isVehicleReservedTwoTimesSamesDay(long reservation_id, long vehicle_id, List<Reservation> listReservation, LocalDate debut) {
-        boolean bool = false;
-        for (Reservation reservation : listReservation){
-            LocalDate debutR = reservation.getDebut();
-            if ((reservation.getId() != reservation_id) && (reservation.getVehicle_id() == vehicle_id) && (reservation.getDebut() == debutR)){
-                bool = true;
             }
         }
         return bool;

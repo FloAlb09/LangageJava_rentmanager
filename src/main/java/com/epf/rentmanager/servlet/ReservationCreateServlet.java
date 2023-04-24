@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+import com.epf.rentmanager.validator.ReservationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -64,8 +65,8 @@ public class ReservationCreateServlet extends HttpServlet {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate debut = LocalDate.parse(debut_string, formatter);
             LocalDate fin = LocalDate.parse(fin_string, formatter);
-
             Reservation reservation = new Reservation(client_id, vehicle_id, debut, fin);
+
             try {
                 request.setAttribute("reservations", reservationService.create(reservation));
             } catch (ServiceException e) {

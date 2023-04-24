@@ -66,7 +66,7 @@ public class ReservationUpdateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        if (sauvU == true) {
+        if (sauvU) {
             try {
                 List<Vehicle> listVehiclesR = new ArrayList<>();
                 List<Vehicle> listVehicles = vehicleService.findAll();
@@ -167,7 +167,7 @@ public class ReservationUpdateServlet extends HttpServlet {
             } catch (ServiceException e1) {
                 e1.printStackTrace();
             }
-            boolean test = ReservationValidator.dateValidator(reservation_id, listReservationV, debut, fin);
+            boolean test = ReservationValidator.isVehicleReservedTwoTimesSamesDay(reservation_id, listReservationV, debut, fin);
             if (test) {
                 Reservation reservation = new Reservation(client_id, vehicle_id, debut, fin);
                 try {
