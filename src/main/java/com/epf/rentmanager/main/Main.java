@@ -13,6 +13,9 @@ import com.epf.rentmanager.service.VehicleService;
 import com.epf.rentmanager.configuration.AppConfiguration;
 
 import java.time.LocalDate;
+import java.time.Month;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class Main {
 
@@ -21,9 +24,24 @@ public class Main {
         ClientService clientService = context.getBean(ClientService.class);
         VehicleService vehicleService = context.getBean(VehicleService.class);
         ReservationService reservationService = context.getBean(ReservationService.class);
-
         try {
-            System.out.println(clientService.findById(18));
+            List<Reservation> resaByClientVehicleId = reservationService.findResaByClientVehicleId(1, 1);
+            System.out.println("reservationClientVehicle : " + resaByClientVehicleId);
+            long periode = 0l;
+            LocalDate debutSauvU = null;
+            System.out.println("debutSauvU : " + debutSauvU);
+            for (Reservation reservation : resaByClientVehicleId){
+                LocalDate debutR = reservation.getDebut();
+                System.out.println("debutR : " + debutR);
+                LocalDate finR = reservation.getFin();
+                System.out.println("finR : " + finR);
+                periode += ChronoUnit.DAYS.between(debutR, finR);
+                System.out.println("periode : " + periode);
+                LocalDate debutSauv = debutR;
+                System.out.println("------------");
+            }
+            System.out.println("periode : " + periode);
+
         } catch (ServiceException e) {
             e.printStackTrace();
         }

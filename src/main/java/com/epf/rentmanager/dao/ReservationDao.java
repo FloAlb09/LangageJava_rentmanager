@@ -26,6 +26,7 @@ public class ReservationDao {
 
     private static final String FIND_RESERVATIONS_QUERY = "SELECT id, client_id, vehicle_id, debut, fin FROM Reservation;";
     private static final String FIND_RESERVATIONS_BY_CLIENT_QUERY = "SELECT id, vehicle_id, debut, fin FROM Reservation WHERE client_id=?;";
+    private static final String FIND_RESERVATIONS_BY_CLIENT_VEHICLE_QUERY = "SELECT id, debut, fin FROM Reservation WHERE client_id=? AND vehicle_id=?;";
     private static final String FIND_RESERVATIONS_BY_VEHICLE_QUERY = "SELECT Reservation.id, Client.nom, Client.prenom, Client.email, Reservation.debut, Reservation.fin FROM Reservation INNER JOIN Client ON Reservation.client_id = Client.id WHERE vehicle_id=?;";
     private static final String CREATE_RESERVATION_QUERY = "INSERT INTO Reservation(client_id, vehicle_id, debut, fin) VALUES(?, ?, ?, ?);";
     private static final String DELETE_RESERVATION_QUERY = "DELETE FROM Reservation WHERE id=?;";
@@ -65,6 +66,27 @@ public class ReservationDao {
             while (rs.next()) {
                 Long id = rs.getLong("id");
                 Long vehicle_id = rs.getLong("vehicle_id");
+                LocalDate debut = rs.getDate("debut").toLocalDate();
+                LocalDate fin = rs.getDate("fin").toLocalDate();
+                Reservation reservation = new Reservation(id, client_id, vehicle_id, debut, fin);
+                listReservationByClient.add(reservation);
+            }
+            return listReservationByClient;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public List<Reservation> findResaByClientVehicleId(long client_id, long vehicle_id) throws DaoException {
+        try (Connection con = ConnectionManager.getConnection()) {
+            ArrayList<Reservation> listReservationByClient = new ArrayList<Reservation>();
+            PreparedStatement ps = con.prepareStatement(FIND_RESERVATIONS_BY_CLIENT_VEHICLE_QUERY);
+            ps.setLong(1, client_id);
+            ps.setLong(2, vehicle_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Long id = rs.getLong("id");
                 LocalDate debut = rs.getDate("debut").toLocalDate();
                 LocalDate fin = rs.getDate("fin").toLocalDate();
                 Reservation reservation = new Reservation(id, client_id, vehicle_id, debut, fin);

@@ -36,6 +36,15 @@ public class ReservationService {
         return null;
     }
 
+    public List<Reservation> findResaByClientVehicleId(long client_id, long vehicle_id) throws ServiceException {
+        try {
+            return this.reservationDao.findResaByClientVehicleId(client_id, vehicle_id);
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public List<Reservation> findResaByVehicle(long vehicle_id) throws ServiceException {
         try {
             return this.reservationDao.findResaByVehicleId(vehicle_id);

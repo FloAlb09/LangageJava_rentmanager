@@ -6,7 +6,7 @@ import com.epf.rentmanager.modele.Reservation;
 import com.epf.rentmanager.modele.Vehicle;
 import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
-import com.epf.rentmanager.validator.ReservationValidator;
+import com.epf.rentmanager.validator.ReservationUpdateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -167,7 +167,7 @@ public class ReservationUpdateServlet extends HttpServlet {
             } catch (ServiceException e1) {
                 e1.printStackTrace();
             }
-            boolean test = ReservationValidator.isVehicleReservedTwoTimesSamesDay(reservation_id, listReservationV, debut, fin);
+            boolean test = ReservationUpdateValidator.dateValidator(reservation_id, listReservationV, debut, fin);
             if (test) {
                 Reservation reservation = new Reservation(client_id, vehicle_id, debut, fin);
                 try {

@@ -43,7 +43,6 @@ public class Vehicle {
     }
 
     //methode toString()
-
     @Override
     public String toString() {
         return "Constructeur : " + constructeur +

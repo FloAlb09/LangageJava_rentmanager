@@ -49,11 +49,9 @@ public class ReservationListServlet extends HttpServlet{
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String reservation_id_string_delete = request.getParameter("deleteReservation");
-        System.out.println("reservation_id_string_delete" + reservation_id_string_delete);
         if (reservation_id_string_delete != null) {
             long reservation_id_delete = Long.parseLong(reservation_id_string_delete);
-            System.out.println("reservation_id_delete" + reservation_id_delete);
-            Reservation reservationDelete = new Reservation(reservation_id_delete, null, null, null, null);
+            Reservation reservationDelete = new Reservation(reservation_id_delete);
             try {
                 reservationService.delete(reservationDelete);
             } catch (ServiceException e) {
