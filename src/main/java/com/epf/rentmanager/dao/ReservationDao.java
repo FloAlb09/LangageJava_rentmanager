@@ -111,7 +111,7 @@ public class ReservationDao {
                 String client_email = rs.getString("Client.email");
                 LocalDate reservation_debut = rs.getDate("Reservation.debut").toLocalDate();
                 LocalDate reservation_fin = rs.getDate("Reservation.fin").toLocalDate();
-                Reservation reservation = new Reservation(reservation_id, client, client_email, reservation_debut, reservation_fin);
+                Reservation reservation = new Reservation(reservation_id, vehicle_id, client, client_email, reservation_debut, reservation_fin);
                 listReservationByVehicle.add(reservation);
             }
             return listReservationByVehicle;

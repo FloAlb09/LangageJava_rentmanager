@@ -70,11 +70,12 @@ public class ReservationCreateServlet extends HttpServlet {
             Reservation reservation = new Reservation(client_id, vehicle_id, debut, fin);
 
             List<Reservation> reservationByClientVehicle = reservationService.findResaByClientVehicleId(client_id, vehicle_id);
+            List<Reservation> reservationByVehicle = reservationService.findResaByVehicle(vehicle_id);
 
-            List<Reservation> allResrvation = reservationService.findAll();
-            boolean testVehicleAlreadyReserved = ReservationCreateValidator.isVehicleAlreadyReserved(allResrvation, vehicle_id, debut, fin);
-            boolean testVehicleReservedMoreThanSevenDaysBySameClient = ReservationCreateValidator.isVehicleReservedMoreThanSevenDaysBySameClient(reservationByClientVehicle, debut, fin);
-            if (!testVehicleAlreadyReserved & !testVehicleReservedMoreThanSevenDaysBySameClient) {
+            boolean testVehicleAlreadyReserved = ReservationCreateValidator.isVehicleAlreadyReserved(reservationByVehicle, debut, fin);
+            boolean testVehicleReservedMoreThanSevenDaysBySameClient = ReservationCreateValidator.isVehicleReservedMoreThanSevenDaysBySameClient(reservationByClientVehicle, reservation);
+            boolean testVehicleReservedMoreThanThirthyDaysInARow = ReservationCreateValidator.isVehicleReservedMoreThanThirtyDaysInARow(reservationByVehicle, reservation);
+            if (!testVehicleAlreadyReserved & !testVehicleReservedMoreThanSevenDaysBySameClient & !testVehicleReservedMoreThanThirthyDaysInARow) {
                 try {
                     request.setAttribute("rents", reservationService.create(reservation));
                 } catch (ServiceException e) {
@@ -82,19 +83,13 @@ public class ReservationCreateServlet extends HttpServlet {
                 }
                 response.sendRedirect("/rentmanager/rents");
             } else if (testVehicleAlreadyReserved){
-                List<Reservation> allReservation = reservationService.findAll();
-                for (Reservation reservations : allReservation) {
-                    LocalDate debutR = reservations.getDebut();
-                    LocalDate finR = reservations.getFin();
-                    long vehicleIdR = reservations.getVehicle_id();
-                    if ((vehicleIdR == vehicle_id) && (debut.isEqual(debutR) || fin.isEqual(finR) || (debut.isAfter(debutR) && debut.isBefore(finR)) || (fin.isAfter(debutR) && fin.isBefore(finR)) || (debut.isBefore(debutR) && fin.isAfter(finR)))) {
-                        JOptionPane.showMessageDialog(null, "Le véhicule est déjà réservé du " + debutR + " au " + finR + ".", "vehicleAlreadyReserved", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Le véhicule est déjà réservé.", "vehicleAlreadyReserved", JOptionPane.ERROR_MESSAGE);
                         response.sendRedirect("/rentmanager/rents/create");
-                        break;
-                    }
-                }
             } else if (testVehicleReservedMoreThanSevenDaysBySameClient){
                 JOptionPane.showMessageDialog(null, "Un véhicule ne peut pas être réservé plus de sept jours par un même client.", "vehicleReservedMoreThanSevenDays", JOptionPane.ERROR_MESSAGE);
+                response.sendRedirect("/rentmanager/rents/create");
+            } else if (testVehicleReservedMoreThanThirthyDaysInARow){
+                JOptionPane.showMessageDialog(null, "Un véhicule ne peut pas être réservé plus de 30 jours de suite.", "vehicleReservedMoreThanThirtyDays", JOptionPane.ERROR_MESSAGE);
                 response.sendRedirect("/rentmanager/rents/create");
             }
         } catch (NumberFormatException e) {

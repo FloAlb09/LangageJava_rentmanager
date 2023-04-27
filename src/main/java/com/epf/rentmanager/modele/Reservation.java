@@ -1,7 +1,6 @@
 package com.epf.rentmanager.modele;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 public class Reservation {
     private Long id;
@@ -36,8 +35,9 @@ public class Reservation {
         this.id = id;
     }
 
-    public Reservation(Long id, String client_nom, String client_email, LocalDate debut, LocalDate fin) {
+    public Reservation(Long id, Long vehicle_id, String client_nom, String client_email, LocalDate debut, LocalDate fin) {
         this.id = id;
+        this.vehicle_id = vehicle_id;
         this.client_nom = client_nom;
         this.client_email = client_email;
         this.debut = debut;
@@ -128,8 +128,6 @@ public class Reservation {
     }
 
     //methode to_string
-
-
     @Override
     public String toString() {
         return "Reservation{" + "id=" + id + ", client_id=" + client_id + ", client_nom='" + client_nom + '\'' + ", client_email='" + client_email + '\'' + ", vehicle_id=" + vehicle_id + ", vehicle_constructeur='" + vehicle_constructeur + '\'' + ", debut=" + debut + ", fin=" + fin + '}';

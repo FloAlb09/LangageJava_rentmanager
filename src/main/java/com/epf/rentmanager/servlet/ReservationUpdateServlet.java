@@ -163,7 +163,7 @@ public class ReservationUpdateServlet extends HttpServlet {
 
             List<Reservation> listReservationV = new ArrayList<>();
             try {
-                listReservationV = reservationService.findResaByVehicle(vehicle_id);
+                listReservationV = reservationService.findResaByClientVehicleId(client_id, vehicle_id);
             } catch (ServiceException e1) {
                 e1.printStackTrace();
             }
