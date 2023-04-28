@@ -35,7 +35,7 @@ public class ClientDetailServlet extends HttpServlet {
 
     public static long client_id = -1;
 
-    protected static void recupIdClient(long client_id_recup) {
+    protected static void clientIdRecup(long client_id_recup) {
         client_id = client_id_recup;
     }
 

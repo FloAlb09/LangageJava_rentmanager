@@ -29,8 +29,8 @@ public class ClientUpdateServlet extends HttpServlet {
     @Autowired
     ClientService clientService;
 
-    protected static void recupIdClient(int idClientRecup) {
-        client_id = idClientRecup;
+    protected static void clientIdRecup(long client_id_recup) {
+        client_id = client_id_recup;
     }
 
     @Override
