@@ -10,6 +10,7 @@ import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
 import com.epf.rentmanager.validator.ReservationUpdateValidator;
 import com.epf.rentmanager.validator.ReservationValidator;
+import com.epf.rentmanager.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -17,7 +18,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -43,7 +43,7 @@ public class ReservationUpdateServlet extends HttpServlet {
     @Autowired
     ReservationService reservationService;
 
-    private static void sauvegarde(long client_id, long vehicle_id, LocalDate debut, LocalDate fin) throws ServletException {
+    private static void sauvegarde(long client_id, long vehicle_id, LocalDate debut, LocalDate fin) {
         client_id_sauvU = client_id;
         vehicle_id_sauvU = vehicle_id;
         debut_sauvU = debut;
@@ -107,13 +107,13 @@ public class ReservationUpdateServlet extends HttpServlet {
                 List<Vehicle> listVehicleR = new ArrayList<>();
                 List<Vehicle> listVehicleAll = vehicleService.findAll();
                 for (Vehicle v : listVehicleAll) {
-                    if (v.getId() == reservation.getVehicle_id()) {
+                    if (v.getId().equals(reservation.getVehicle_id())) {
                         listVehicleR.add(v);
                         break;
                     }
                 }
                 for (Vehicle v : listVehicleAll) {
-                    if (v.getId() != reservation.getVehicle_id()) {
+                    if (!v.getId().equals(reservation.getVehicle_id())) {
                         listVehicleR.add(v);
                     }
                 }
@@ -122,13 +122,13 @@ public class ReservationUpdateServlet extends HttpServlet {
                 List<Client> listClientR = new ArrayList<>();
                 List<Client> listClientAll = clientService.findAll();
                 for (Client c : listClientAll) {
-                    if (c.getId() == reservation.getClient_id()) {
+                    if (c.getId().equals(reservation.getClient_id())) {
                         listClientR.add(c);
                         break;
                     }
                 }
                 for (Client c : listClientAll) {
-                    if (c.getId() != reservation.getClient_id()) {
+                    if (!c.getId().equals(reservation.getClient_id())) {
                         listClientR.add(c);
                     }
                 }
@@ -180,20 +180,14 @@ public class ReservationUpdateServlet extends HttpServlet {
                     e.printStackTrace();
                 }
                 response.sendRedirect("/rentmanager/rents");
-            } else if (testVehicleAlreadyReserved){
-                JOptionPane jop = new JOptionPane();
-                jop.showMessageDialog(null, "Le véhicule est déjà réservé.", "vehicleAlreadyReserved", JOptionPane.ERROR_MESSAGE);
-                ReservationUpdateServlet.sauvegarde(client_id, vehicle_id, debut, fin);
+            } else if (testVehicleAlreadyReserved) {
+                Validator.showMessageDialog("Le véhicule est déjà réservé.");
                 response.sendRedirect("/rentmanager/rents/update");
-            } else if (testVehicleReservedMoreThanSevenDaysBySameClient){
-                JOptionPane jop = new JOptionPane();
-                jop.showMessageDialog(null, "Un véhicule ne peut pas être réservé plus de sept jours par un même client.", "vehicleReservedMoreThanSevenDays", JOptionPane.ERROR_MESSAGE);
-                ReservationUpdateServlet.sauvegarde(client_id, vehicle_id, debut, fin);
+            } else if (testVehicleReservedMoreThanSevenDaysBySameClient) {
+                Validator.showMessageDialog("Un véhicule ne peut pas être réservé plus de sept jours par un même client.");
                 response.sendRedirect("/rentmanager/rents/update");
-            } else if (testVehicleReservedMoreThanThirtyDaysInARow){
-                JOptionPane jop = new JOptionPane();
-                jop.showMessageDialog(null, "Un véhicule ne peut pas être réservé plus de 30 jours de suite.", "vehicleReservedMoreThanThirtyDays", JOptionPane.ERROR_MESSAGE);
-                ReservationUpdateServlet.sauvegarde(client_id, vehicle_id, debut, fin);
+            } else if (testVehicleReservedMoreThanThirtyDaysInARow) {
+                Validator.showMessageDialog("Un véhicule ne peut pas être réservé plus de 30 jours de suite.");
                 response.sendRedirect("/rentmanager/rents/update");
             }
         } catch (NumberFormatException e) {

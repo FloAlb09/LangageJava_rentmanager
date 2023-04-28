@@ -89,6 +89,6 @@ public class Client {
 
     @Override
     public String toString() {
-        return "Nom : " + nom + ", Prenom : " + prenom + ", Email : " + email + ", Naissance : " + naissance;
+        return prenom + " " + nom + " (" + email + ")";
     }
 }

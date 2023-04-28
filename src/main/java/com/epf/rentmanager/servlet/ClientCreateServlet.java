@@ -2,6 +2,8 @@ package com.epf.rentmanager.servlet;
 
 import com.epf.rentmanager.exception.ServiceException;
 
+import com.epf.rentmanager.validator.ClientCreateValidator;
+import com.epf.rentmanager.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -9,7 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -19,8 +20,6 @@ import com.epf.rentmanager.modele.Client;
 import com.epf.rentmanager.service.ClientService;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import com.epf.rentmanager.validator.ClientValidator;
-
-import static com.epf.rentmanager.utils.IOUtils.print;
 
 @WebServlet("/users/create")
 public class ClientCreateServlet extends HttpServlet {
@@ -53,7 +52,7 @@ public class ClientCreateServlet extends HttpServlet {
             List<Client> allClients = clientService.findAll();
 
             boolean testAgeLegal = ClientValidator.isLegal(client);
-            boolean testMailUsed = ClientValidator.isEmailUsed(allClients, client);
+            boolean testMailUsed = ClientCreateValidator.isEmailUsed(allClients, client);
             boolean testNameLength = ClientValidator.isLenghtNameAtLeastThree(client);
             boolean testFirstNameLength = ClientValidator.isLenghtFirstnameAtLeastThree(client);
 
@@ -65,16 +64,17 @@ public class ClientCreateServlet extends HttpServlet {
                 }
                 response.sendRedirect("/rentmanager/users");
             } else if (!testAgeLegal) {
-                JOptionPane.showMessageDialog(null, "Le client doit être majeur", "Age", JOptionPane.ERROR_MESSAGE);
+                Validator.showMessageDialog("Le client doit être majeur.");
                 response.sendRedirect("/rentmanager/users/create");
-            } else if (testMailUsed){
-                JOptionPane.showMessageDialog(null, "Ce mail est déjà utilisé", "Mail", JOptionPane.ERROR_MESSAGE);
+            } else if (testMailUsed) {
+                Validator.showMessageDialog("Ce mail est déjà utilisé.");
                 response.sendRedirect("/rentmanager/users/create");
-            } else if (!testNameLength){
-                JOptionPane.showMessageDialog(null, "Le nom d'un client doit comporter plus de 3 charactères", "nameLength", JOptionPane.ERROR_MESSAGE);
+            } else if (!testNameLength) {
+                Validator.showMessageDialog("Le nom d'un client doit comporter plus de 3 caractères.");
                 response.sendRedirect("/rentmanager/users/create");
-            } else if (!testFirstNameLength){
-                JOptionPane.showMessageDialog(null, "Le prénom d'un client doit comporter plus de 3 charactères", "firstnameLength", JOptionPane.ERROR_MESSAGE);
+            } else if (!testFirstNameLength) {
+                Validator.showMessageDialog("Le prénom d'un client doit comporter plus de 3 caractères.");
+                response.sendRedirect("/rentmanager/users/create");
                 response.sendRedirect("/rentmanager/users/create");
             }
         } catch (NumberFormatException e) {

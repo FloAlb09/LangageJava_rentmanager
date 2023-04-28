@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -32,19 +33,16 @@ public class VehicleListServlet extends HttpServlet {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             request.setAttribute("vehicles", vehicleService.findAll());
-            this.getServletContext().getRequestDispatcher("/WEB-INF/views/vehicles/list.jsp").forward(request,
-                    response);
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/vehicles/list.jsp").forward(request, response);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String vehicle_id_string_delete = request.getParameter("deleteVehicle");
         if (vehicle_id_string_delete != null) {
             long vehicle_id_delete = Long.parseLong(vehicle_id_string_delete);
@@ -56,17 +54,21 @@ public class VehicleListServlet extends HttpServlet {
             } catch (ServiceException e) {
                 throw new RuntimeException(e);
             }
-            for (Reservation reservation_delete : reservationByVehicle){
+
+            int retour = JOptionPane.showConfirmDialog(null, "Confirmez-vous la suppression du véhicule. Les réservations associées seront supprimées.", "Suppression", JOptionPane.YES_NO_OPTION);
+            if (retour == 0) {
+                for (Reservation reservation_delete : reservationByVehicle) {
+                    try {
+                        reservationService.delete(reservation_delete);
+                    } catch (ServiceException e) {
+                        e.printStackTrace();
+                    }
+                }
                 try {
-                    reservationService.delete(reservation_delete);
+                    vehicleService.delete(vehilceDelete);
                 } catch (ServiceException e) {
                     e.printStackTrace();
                 }
-            }
-            try {
-                vehicleService.delete(vehilceDelete);
-            } catch (ServiceException e) {
-                e.printStackTrace();
             }
             response.sendRedirect("/rentmanager/cars");
         }
@@ -78,7 +80,7 @@ public class VehicleListServlet extends HttpServlet {
             response.sendRedirect("/rentmanager/cars/update");
         }
 
-        String vehicle_id_string_detail = request.getParameter("detailVehicle") ;
+        String vehicle_id_string_detail = request.getParameter("detailVehicle");
         if (vehicle_id_string_detail != null) {
             long vehicle_id_detail = Long.parseLong(vehicle_id_string_detail);
             VehicleDetailServlet.recupIdVehicle(vehicle_id_detail);

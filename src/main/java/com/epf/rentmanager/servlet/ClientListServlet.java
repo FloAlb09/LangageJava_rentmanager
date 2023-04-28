@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
 import java.io.IOException;
 import java.util.List;
 
@@ -67,17 +68,22 @@ public class ClientListServlet extends HttpServlet {
             } catch (ServiceException e) {
                 throw new RuntimeException(e);
             }
-            for (Reservation reservation_delete : reservationByClient){
+            JFrame jf=new JFrame();
+            jf.setAlwaysOnTop(true);
+            int retour = JOptionPane.showConfirmDialog(jf, "Confirmez-vous la suppression du client. Les réservations associées seront supprimées.", "Suppression", JOptionPane.YES_NO_OPTION);
+            if (retour == 0) {
+                for (Reservation reservation_delete : reservationByClient) {
+                    try {
+                        reservationService.delete(reservation_delete);
+                    } catch (ServiceException e) {
+                        e.printStackTrace();
+                    }
+                }
                 try {
-                    reservationService.delete(reservation_delete);
+                    clientService.delete(clientDelete);
                 } catch (ServiceException e) {
                     e.printStackTrace();
                 }
-            }
-            try {
-                clientService.delete(clientDelete);
-            } catch (ServiceException e) {
-                e.printStackTrace();
             }
             response.sendRedirect("/rentmanager/users");
         }

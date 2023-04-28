@@ -4,6 +4,7 @@ import com.epf.rentmanager.exception.ServiceException;
 
 import com.epf.rentmanager.modele.Vehicle;
 import com.epf.rentmanager.service.VehicleService;
+import com.epf.rentmanager.validator.Validator;
 import com.epf.rentmanager.validator.VehicleValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -70,11 +71,11 @@ public class VehicleUpdateServlet extends HttpServlet {
                 }
                 response.sendRedirect("/rentmanager/cars");
             } else if (testConstructorEmpty) {
-                JOptionPane.showMessageDialog(null, "Le véhicule doit avoir un constructeur", "constructorEmpty", JOptionPane.ERROR_MESSAGE);
-                response.sendRedirect("/rentmanager/cars/create");
+                Validator.showMessageDialog("Le véhicule doit avoir un constructeur.");
+                response.sendRedirect("/rentmanager/cars/update");
             } else if (!testNb_placesBetweenTwoAndNine) {
-                JOptionPane.showMessageDialog(null, "Le nombre de places du véhicule doit être compris entre 2 et 9", "nbPlace", JOptionPane.ERROR_MESSAGE);
-                response.sendRedirect("/rentmanager/cars/create");
+                Validator.showMessageDialog("Le nombre de places du véhicule doit être compris entre 2 et 9.");
+                response.sendRedirect("/rentmanager/cars/update");
             }
         } catch (NumberFormatException e) {
             response.sendRedirect("/rentmanager/cars");

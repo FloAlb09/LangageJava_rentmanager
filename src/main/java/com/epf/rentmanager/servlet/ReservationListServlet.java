@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 
 @WebServlet("/rents")
-public class ReservationListServlet extends HttpServlet{
+public class ReservationListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     @Autowired
@@ -41,12 +42,11 @@ public class ReservationListServlet extends HttpServlet{
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             List<Reservation> listReservations = reservationService.findAll();
             List<Reservation> listReservationsFormated = new ArrayList<>();
-            for (Reservation reservation : listReservations){
+            for (Reservation reservation : listReservations) {
                 Client client = clientService.findById(reservation.getClient_id());
                 Vehicle vehicle = vehicleService.findById(reservation.getVehicle_id());
                 long id = reservation.getId();
@@ -55,22 +55,25 @@ public class ReservationListServlet extends HttpServlet{
                 listReservationsFormated.add(new Reservation(id, client, vehicle, debut, fin));
             }
             request.setAttribute("listReservations", listReservationsFormated);
-            this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/list.jsp").forward(request,response);
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/list.jsp").forward(request, response);
         } catch (ServiceException e) {
             e.printStackTrace();
         }
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String reservation_id_string_delete = request.getParameter("deleteReservation");
         if (reservation_id_string_delete != null) {
             long reservation_id_delete = Long.parseLong(reservation_id_string_delete);
             Reservation reservationDelete = new Reservation(reservation_id_delete);
-            try {
-                reservationService.delete(reservationDelete);
-            } catch (ServiceException e) {
-                e.printStackTrace();
+
+            int retour = JOptionPane.showConfirmDialog(null, "Confirmez-vous la suppression de la réservation.", "Suppression", JOptionPane.YES_NO_OPTION);
+            if (retour == 0) {
+                try {
+                    reservationService.delete(reservationDelete);
+                } catch (ServiceException e) {
+                    e.printStackTrace();
+                }
             }
             response.sendRedirect("/rentmanager/rents");
         }
@@ -82,7 +85,7 @@ public class ReservationListServlet extends HttpServlet{
             response.sendRedirect("/rentmanager/rents/update");
         }
 
-        String reservation_id_string_detail = request.getParameter("detailReservation") ;
+        String reservation_id_string_detail = request.getParameter("detailReservation");
         if (reservation_id_string_detail != null) {
             long reservation_id_detail = Long.parseLong(reservation_id_string_detail);
             ReservationDetailServlet.recupIdReservation(reservation_id_detail);

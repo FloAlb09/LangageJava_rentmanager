@@ -31,7 +31,7 @@
 										<div class="col-sm-10">
 											<input type="text" class="form-control" id="nomU"
 												name="nomU" placeholder="Nom" value="${nomU}"
-												required>
+												>
 										</div>
 									</div>
 									<div class="form-group">
@@ -40,7 +40,7 @@
 										<div class="col-sm-10">
 											<input type="text" class="form-control" id="prenomU"
 												name="prenomU" placeholder="Prenom"
-												value="${prenomU}" required>
+												value="${prenomU}" >
 										</div>
 									</div>
 									<div class="form-group">
@@ -48,7 +48,7 @@
 
 										<div class="col-sm-10">
 											<input type="email" class="form-control" id="emailU"
-												name="emailU" placeholder="Email" value="${emailU}" required>
+												name="emailU" placeholder="Email" value="${emailU}" >
 										</div>
 									</div>
 									<div class="form-group">
@@ -58,7 +58,7 @@
 										<div class="col-sm-10">
 											<input type="date" class="form-control" id="naissanceU"
 												name="naissanceU" placeholder="Date de naissance"
-												value="${naissanceU}" required>
+												value="${naissanceU}">
 										</div>
 									</div>
 								</div>

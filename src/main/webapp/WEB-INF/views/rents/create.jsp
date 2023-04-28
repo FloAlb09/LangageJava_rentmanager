@@ -54,7 +54,7 @@
                                     <label for="begin" class="col-sm-2 control-label">Date de d&eacutebut</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="begin" name="begin"
+                                        <input type="text" class="form-control" id="begin" name="begin" placeholder="dd/mm/yyyy"
                                                data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
                                     </div>
                                 </div>
@@ -62,7 +62,7 @@
                                     <label for="end" class="col-sm-2 control-label">Date de fin</label>
 
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" id="end" name="end"
+                                        <input type="text" class="form-control" id="end" name="end" placeholder="dd/mm/yyyy"
                                                data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
                                     </div>
                                 </div>

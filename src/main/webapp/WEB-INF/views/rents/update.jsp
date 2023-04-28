@@ -55,15 +55,15 @@
 
 										<div class="col-sm-10">
 											<input type="text" class="form-control" id="debut"
-												name="debutU" value="${debutU}" required
+												name="debutU" value="${debutU}" placeholder="dd/mm/yyyy"
 												data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
 										</div>
 									</div>
 									<div class="form-group">
 										<label for="fin" class="col-sm-2 control-label">Date de fin</label>
 										<div class="col-sm-10">
-											<input type="text" class="form-control" id="fin" name="finU"
-												value="${finU}" required data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
+											<input type="text" class="form-control" id="fin" name="finU" placeholder="dd/mm/yyyy"
+												value="${finU}" data-inputmask="'alias': 'dd/mm/yyyy'" data-mask>
 										</div>
 									</div>
 								</div>

@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.epf.rentmanager.validator.ReservationCreateValidator;
 import com.epf.rentmanager.validator.ReservationValidator;
+import com.epf.rentmanager.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -84,13 +85,13 @@ public class ReservationCreateServlet extends HttpServlet {
                 }
                 response.sendRedirect("/rentmanager/rents");
             } else if (testVehicleAlreadyReserved){
-                        JOptionPane.showMessageDialog(null, "Le véhicule est déjà réservé.", "vehicleAlreadyReserved", JOptionPane.ERROR_MESSAGE);
+                Validator.showMessageDialog("Le véhicule est déjà réservé.");
                         response.sendRedirect("/rentmanager/rents/create");
             } else if (testVehicleReservedMoreThanSevenDaysBySameClient){
-                JOptionPane.showMessageDialog(null, "Un véhicule ne peut pas être réservé plus de sept jours par un même client.", "vehicleReservedMoreThanSevenDays", JOptionPane.ERROR_MESSAGE);
+                Validator.showMessageDialog("Un véhicule ne peut pas être réservé plus de sept jours par un même client.");
                 response.sendRedirect("/rentmanager/rents/create");
             } else if (testVehicleReservedMoreThanThirthyDaysInARow){
-                JOptionPane.showMessageDialog(null, "Un véhicule ne peut pas être réservé plus de 30 jours de suite.", "vehicleReservedMoreThanThirtyDays", JOptionPane.ERROR_MESSAGE);
+                Validator.showMessageDialog("Un véhicule ne peut pas être réservé plus de 30 jours de suite.");
                 response.sendRedirect("/rentmanager/rents/create");
             }
         } catch (NumberFormatException e) {

@@ -21,7 +21,7 @@ import java.io.IOException;
 public class ReservationDetailServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
+    public static long reservation_id = -1;
     @Autowired
     VehicleService vehicleService;
     @Autowired
@@ -29,21 +29,18 @@ public class ReservationDetailServlet extends HttpServlet {
     @Autowired
     ReservationService reservationService;
 
+    protected static void recupIdReservation(long reseravation_id_recup) {
+        reservation_id = reseravation_id_recup;
+    }
+
     @Override
     public void init() throws ServletException {
         super.init();
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
-    public static long reservation_id = -1;
-
-    protected static void recupIdReservation(long reseravation_id_recup) {
-        reservation_id = reseravation_id_recup;
-    }
-
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
             Reservation reservation = reservationService.findById(reservation_id);
@@ -54,13 +51,13 @@ public class ReservationDetailServlet extends HttpServlet {
             request.setAttribute("reservation_debut", reservation.getDebut());
             request.setAttribute("reservation_fin", reservation.getFin());
 
-            request.setAttribute("client_id", client.getId());
+            request.setAttribute("client_id", reservation.getClient_id());
             request.setAttribute("client_nom", client.getNom());
             request.setAttribute("client_prenom", client.getPrenom());
             request.setAttribute("client_email", client.getEmail());
             request.setAttribute("client_naissance", client.getNaissance());
 
-            request.setAttribute("vehicle_id", vehicle.getId());
+            request.setAttribute("vehicle_id", reservation.getVehicle_id());
             request.setAttribute("vehicle_constructeur", vehicle.getConstructeur());
             request.setAttribute("vehicle_nb_places", vehicle.getNb_places());
         } catch (ServiceException e) {
@@ -70,8 +67,7 @@ public class ReservationDetailServlet extends HttpServlet {
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/details.jsp").forward(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     }
 
 }

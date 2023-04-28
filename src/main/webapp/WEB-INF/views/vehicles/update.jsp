@@ -29,7 +29,7 @@
 										<div class="col-sm-10">
 											<input type="text" class="form-control" id="constructeurU"
 												name="constructeurU" placeholder="Constructeur"
-												value="${constructeurU}" required>
+												value="${constructeurU}">
 										</div>
 									</div>
 									<div class="form-group">
@@ -39,7 +39,7 @@
 										<div class="col-sm-10">
 											<input type="text" class="form-control" id="nb_placesU"
 												name="nb_placesU" placeholder="Nombre de places"
-												value="${nb_placesU}" required>
+												value="${nb_placesU}">
 										</div>
 									</div>
 								</div>

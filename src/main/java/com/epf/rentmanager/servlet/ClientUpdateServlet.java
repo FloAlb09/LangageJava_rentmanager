@@ -2,6 +2,8 @@ package com.epf.rentmanager.servlet;
 
 import com.epf.rentmanager.exception.ServiceException;
 
+import com.epf.rentmanager.validator.CientUpdateValidator;
+import com.epf.rentmanager.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -9,7 +11,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -66,7 +67,7 @@ public class ClientUpdateServlet extends HttpServlet {
             Client client = new Client(nom, prenom, email, naissance);
             boolean testAgeLegal = ClientValidator.isLegal(client);
             List<Client> allClients = clientService.findAll();
-            boolean testMailUsed = ClientValidator.isEmailUsed(allClients, client);
+            boolean testMailUsed = CientUpdateValidator.isEmailUsed(client_id, allClients, client);
             boolean testNameLength = ClientValidator.isLenghtNameAtLeastThree(client);
             boolean testFirstNameLength = ClientValidator.isLenghtFirstnameAtLeastThree(client);
             if (testAgeLegal && !testMailUsed && testNameLength && testFirstNameLength) {
@@ -77,16 +78,16 @@ public class ClientUpdateServlet extends HttpServlet {
                 }
                 response.sendRedirect("/rentmanager/users");
             } else if (!testAgeLegal) {
-                JOptionPane.showMessageDialog(null, "Le client doit être majeur", "Age", JOptionPane.ERROR_MESSAGE);
+                Validator.showMessageDialog("Le client doit être majeur.");
                 response.sendRedirect("/rentmanager/users/update");
-            } else if (testMailUsed){
-                JOptionPane.showMessageDialog(null, "Ce mail est déjà utilisé", "Mail", JOptionPane.ERROR_MESSAGE);
+            } else if (testMailUsed) {
+                Validator.showMessageDialog("Ce mail est déjà utilisé.");
                 response.sendRedirect("/rentmanager/users/update");
-            } else if (!testNameLength){
-                JOptionPane.showMessageDialog(null, "Le nom d'un client doit comporter plus de 3 charactères", "nameLength", JOptionPane.ERROR_MESSAGE);
+            } else if (!testNameLength) {
+                Validator.showMessageDialog("Le nom d'un client doit comporter plus de 3 caractères.");
                 response.sendRedirect("/rentmanager/users/update");
-            } else if (!testFirstNameLength){
-                JOptionPane.showMessageDialog(null, "Le prénom d'un client doit comporter plus de 3 charactères", "firstnameLength", JOptionPane.ERROR_MESSAGE);
+            } else if (!testFirstNameLength) {
+                Validator.showMessageDialog("Le prénom d'un client doit comporter plus de 3 caractères.");
                 response.sendRedirect("/rentmanager/users/update");
             }
         } catch (NumberFormatException e) {
