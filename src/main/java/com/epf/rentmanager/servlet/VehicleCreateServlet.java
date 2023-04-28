@@ -44,6 +44,7 @@ public class VehicleCreateServlet extends HttpServlet {
 
             boolean testConstructorEmpty = VehicleValidator.isConstructorEmpty(vehicle);
             boolean testNb_placesBetweenTwoAndNine = VehicleValidator.isNb_placesBetweenTwoAndNine(vehicle);
+
             if (!testConstructorEmpty && testNb_placesBetweenTwoAndNine) {
                 try {
                     request.setAttribute("vehicles", vehicleService.create(vehicle));

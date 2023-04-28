@@ -22,6 +22,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.epf.rentmanager.validator.ReservationCreateValidator;
+import com.epf.rentmanager.validator.ReservationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -73,8 +74,8 @@ public class ReservationCreateServlet extends HttpServlet {
             List<Reservation> reservationByVehicle = reservationService.findResaByVehicle(vehicle_id);
 
             boolean testVehicleAlreadyReserved = ReservationCreateValidator.isVehicleAlreadyReserved(reservationByVehicle, debut, fin);
-            boolean testVehicleReservedMoreThanSevenDaysBySameClient = ReservationCreateValidator.isVehicleReservedMoreThanSevenDaysBySameClient(reservationByClientVehicle, reservation);
-            boolean testVehicleReservedMoreThanThirthyDaysInARow = ReservationCreateValidator.isVehicleReservedMoreThanThirtyDaysInARow(reservationByVehicle, reservation);
+            boolean testVehicleReservedMoreThanSevenDaysBySameClient = ReservationValidator.isVehicleReservedMoreThanSevenDaysBySameClient(reservationByClientVehicle, reservation);
+            boolean testVehicleReservedMoreThanThirthyDaysInARow = ReservationValidator.isVehicleReservedMoreThanThirtyDaysInARow(reservationByVehicle, reservation);
             if (!testVehicleAlreadyReserved & !testVehicleReservedMoreThanSevenDaysBySameClient & !testVehicleReservedMoreThanThirthyDaysInARow) {
                 try {
                     request.setAttribute("rents", reservationService.create(reservation));

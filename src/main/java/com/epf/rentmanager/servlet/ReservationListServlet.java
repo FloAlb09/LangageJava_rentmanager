@@ -8,16 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.epf.rentmanager.modele.Client;
 import com.epf.rentmanager.modele.Reservation;
-import com.epf.rentmanager.modele.Vehicle;
-import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.ReservationService;
-import com.epf.rentmanager.service.VehicleService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -63,7 +56,7 @@ public class ReservationListServlet extends HttpServlet{
         String reservation_id_string_update = request.getParameter("updateReservation");
         if (reservation_id_string_update != null) {
             long reservation_id_update = Long.parseLong(reservation_id_string_update);
-            ReservationUpdateServlet.recupIdReservation(reservation_id_update);
+            ReservationUpdateServlet.reservationIdRecup(reservation_id_update);
             response.sendRedirect("/rentmanager/rents/update");
         }
 

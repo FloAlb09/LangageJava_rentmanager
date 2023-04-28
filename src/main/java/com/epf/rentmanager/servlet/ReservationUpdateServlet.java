@@ -2,11 +2,14 @@ package com.epf.rentmanager.servlet;
 
 import com.epf.rentmanager.exception.ServiceException;
 
+import com.epf.rentmanager.modele.Client;
 import com.epf.rentmanager.modele.Reservation;
 import com.epf.rentmanager.modele.Vehicle;
+import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.ReservationService;
 import com.epf.rentmanager.service.VehicleService;
 import com.epf.rentmanager.validator.ReservationUpdateValidator;
+import com.epf.rentmanager.validator.ReservationValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
@@ -21,33 +24,24 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.epf.rentmanager.modele.Client;
-import com.epf.rentmanager.service.ClientService;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 @WebServlet("/rents/update")
 public class ReservationUpdateServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
-
+    public static long reservation_id = -1;
+    private static boolean sauvU;
+    private static long client_id_sauvU;
+    private static long vehicle_id_sauvU;
+    private static LocalDate debut_sauvU;
+    private static LocalDate fin_sauvU;
     @Autowired
     VehicleService vehicleService;
     @Autowired
     ClientService clientService;
     @Autowired
     ReservationService reservationService;
-
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-    }
-
-    private static boolean sauvU;
-    private static long client_id_sauvU;
-    private static long vehicle_id_sauvU;
-    private static LocalDate debut_sauvU;
-    private static LocalDate fin_sauvU;
 
     private static void sauvegarde(long client_id, long vehicle_id, LocalDate debut, LocalDate fin) throws ServletException {
         client_id_sauvU = client_id;
@@ -57,46 +51,49 @@ public class ReservationUpdateServlet extends HttpServlet {
         sauvU = true;
     }
 
-    public static long reservation_id = -1;
-
-    protected static void recupIdReservation(long reservation_id_recup) {
+    protected static void reservationIdRecup(long reservation_id_recup) {
         reservation_id = reservation_id_recup;
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    public void init() throws ServletException {
+        super.init();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    }
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (sauvU) {
             try {
-                List<Vehicle> listVehiclesR = new ArrayList<>();
-                List<Vehicle> listVehicles = vehicleService.findAll();
-                for (Vehicle vehicle : listVehicles) {
-                    if (vehicle.getId() == vehicle_id_sauvU) {
-                        listVehiclesR.add(vehicle);
+                List<Vehicle> listVehicleR = new ArrayList<>();
+                List<Vehicle> listVehicleAll = vehicleService.findAll();
+                for (Vehicle v : listVehicleAll) {
+                    if (v.getId() == vehicle_id_sauvU) {
+                        listVehicleR.add(v);
                         break;
                     }
                 }
-                for (Vehicle vehicle : listVehicles) {
-                    if (vehicle.getId() != vehicle_id_sauvU) {
-                        listVehiclesR.add(vehicle);
+                for (Vehicle v : listVehicleAll) {
+                    if (v.getId() != vehicle_id_sauvU) {
+                        listVehicleR.add(v);
                     }
                 }
-                request.setAttribute("listVehiclesR", listVehiclesR);
+                request.setAttribute("listVehiclesR", listVehicleR);
 
-                List<Client> listClientsR = new ArrayList<>();
-                List<Client> listClients = clientService.findAll();
-                for (Client C : listClients) {
-                    if (C.getId() == client_id_sauvU) {
-                        listClientsR.add(C);
+                List<Client> listClientR = new ArrayList<>();
+                List<Client> listClientAll = clientService.findAll();
+                for (Client c : listClientAll) {
+                    if (c.getId() == client_id_sauvU) {
+                        listClientR.add(c);
                         break;
                     }
                 }
-                for (Client C : listClients) {
-                    if (C.getId() != client_id_sauvU) {
-                        listClientsR.add(C);
+                for (Client c : listClientAll) {
+                    if (c.getId() != client_id_sauvU) {
+                        listClientR.add(c);
                     }
                 }
-                request.setAttribute("listClientsR", listClientsR);
+                request.setAttribute("listClientsR", listClientR);
             } catch (ServiceException e) {
                 e.printStackTrace();
             }
@@ -106,35 +103,36 @@ public class ReservationUpdateServlet extends HttpServlet {
             Reservation reservation = new Reservation(reservation_id);
             try {
                 reservation = reservationService.findById(reservation_id);
-                List<Vehicle> listVehiclesR = new ArrayList<>();
-                List<Vehicle> listVehicles = vehicleService.findAll();
-                for (Vehicle vehicle : listVehicles) {
-                    if (vehicle.getId() == reservation.getVehicle_id()) {
-                        listVehiclesR.add(vehicle);
-                        break;
-                    }
-                }
-                for (Vehicle vehicle : listVehicles) {
-                    if (vehicle.getId() != reservation.getVehicle_id()) {
-                        listVehiclesR.add(vehicle);
-                    }
-                }
-                request.setAttribute("listVehiclesR", listVehiclesR);
 
-                List<Client> listClientsR = new ArrayList<>();
-                List<Client> listClients = clientService.findAll();
-                for (Client C : listClients) {
-                    if (C.getId() == reservation.getClient_id()) {
-                        listClientsR.add(C);
+                List<Vehicle> listVehicleR = new ArrayList<>();
+                List<Vehicle> listVehicleAll = vehicleService.findAll();
+                for (Vehicle v : listVehicleAll) {
+                    if (v.getId() == reservation.getVehicle_id()) {
+                        listVehicleR.add(v);
                         break;
                     }
                 }
-                for (Client C : listClients) {
-                    if (C.getId() != reservation.getClient_id()) {
-                        listClientsR.add(C);
+                for (Vehicle v : listVehicleAll) {
+                    if (v.getId() != reservation.getVehicle_id()) {
+                        listVehicleR.add(v);
                     }
                 }
-                request.setAttribute("listClientsR", listClientsR);
+                request.setAttribute("listVehiclesR", listVehicleR);
+
+                List<Client> listClientR = new ArrayList<>();
+                List<Client> listClientAll = clientService.findAll();
+                for (Client c : listClientAll) {
+                    if (c.getId() == reservation.getClient_id()) {
+                        listClientR.add(c);
+                        break;
+                    }
+                }
+                for (Client c : listClientAll) {
+                    if (c.getId() != reservation.getClient_id()) {
+                        listClientR.add(c);
+                    }
+                }
+                request.setAttribute("listClientsR", listClientR);
             } catch (ServiceException e) {
                 e.printStackTrace();
             }
@@ -145,11 +143,10 @@ public class ReservationUpdateServlet extends HttpServlet {
         this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/update.jsp").forward(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
-            int action = Integer.parseInt(request.getParameter("action"));
+            Integer.parseInt(request.getParameter("action"));
 
             String client_id_string = request.getParameter("clientU");
             String vehicle_id_string = request.getParameter("vehicleU");
@@ -161,31 +158,44 @@ public class ReservationUpdateServlet extends HttpServlet {
             LocalDate debut = LocalDate.parse(debut_string, formatter);
             LocalDate fin = LocalDate.parse(fin_string, formatter);
 
-            List<Reservation> listReservationV = new ArrayList<>();
+            Reservation reservationUpdate = new Reservation(client_id, vehicle_id, debut, fin);
+
+            List<Reservation> reservationByVehicle = new ArrayList<>();
+            List<Reservation> reservationByClientVehicle = new ArrayList<>();
             try {
-                listReservationV = reservationService.findResaByClientVehicleId(client_id, vehicle_id);
+                reservationByVehicle = reservationService.findResaByVehicle(vehicle_id);
+                reservationByClientVehicle = reservationService.findResaByClientVehicleId(client_id, vehicle_id);
             } catch (ServiceException e1) {
                 e1.printStackTrace();
             }
-            boolean test = ReservationUpdateValidator.dateValidator(reservation_id, listReservationV, debut, fin);
-            if (test) {
-                Reservation reservation = new Reservation(client_id, vehicle_id, debut, fin);
+            boolean testVehicleAlreadyReserved = ReservationUpdateValidator.isVehicleAlreadyReserved(reservation_id, reservationByVehicle, debut, fin);
+            boolean testVehicleReservedMoreThanSevenDaysBySameClient = ReservationValidator.isVehicleReservedMoreThanSevenDaysBySameClient(reservationByClientVehicle, reservationUpdate);
+            boolean testVehicleReservedMoreThanThirtyDaysInARow = ReservationValidator.isVehicleReservedMoreThanThirtyDaysInARow(reservationByVehicle, reservationUpdate);
+
+            if (!testVehicleAlreadyReserved && !testVehicleReservedMoreThanSevenDaysBySameClient && !testVehicleReservedMoreThanThirtyDaysInARow) {
                 try {
-                    reservationService.update(reservation, reservation_id);
+                    reservationService.update(reservationUpdate, reservation_id);
                     sauvU = false;
                 } catch (ServiceException e) {
                     e.printStackTrace();
                 }
                 response.sendRedirect("/rentmanager/rents");
-            } else {
+            } else if (testVehicleAlreadyReserved){
                 JOptionPane jop = new JOptionPane();
-                jop.showMessageDialog(null,
-                        "La voiture n'est pas disponible sur cette période. Elle est réservée par un autre client.",
-                        "Disponibilite", JOptionPane.ERROR_MESSAGE);
+                jop.showMessageDialog(null, "Le véhicule est déjà réservé.", "vehicleAlreadyReserved", JOptionPane.ERROR_MESSAGE);
+                ReservationUpdateServlet.sauvegarde(client_id, vehicle_id, debut, fin);
+                response.sendRedirect("/rentmanager/rents/update");
+            } else if (testVehicleReservedMoreThanSevenDaysBySameClient){
+                JOptionPane jop = new JOptionPane();
+                jop.showMessageDialog(null, "Un véhicule ne peut pas être réservé plus de sept jours par un même client.", "vehicleReservedMoreThanSevenDays", JOptionPane.ERROR_MESSAGE);
+                ReservationUpdateServlet.sauvegarde(client_id, vehicle_id, debut, fin);
+                response.sendRedirect("/rentmanager/rents/update");
+            } else if (testVehicleReservedMoreThanThirtyDaysInARow){
+                JOptionPane jop = new JOptionPane();
+                jop.showMessageDialog(null, "Un véhicule ne peut pas être réservé plus de 30 jours de suite.", "vehicleReservedMoreThanThirtyDays", JOptionPane.ERROR_MESSAGE);
                 ReservationUpdateServlet.sauvegarde(client_id, vehicle_id, debut, fin);
                 response.sendRedirect("/rentmanager/rents/update");
             }
-
         } catch (NumberFormatException e) {
             sauvU = false;
             response.sendRedirect("/rentmanager/rents");

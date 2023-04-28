@@ -7,10 +7,7 @@ import org.springframework.stereotype.Component;
 public class VehicleValidator {
     public static boolean isConstructorEmpty(Vehicle vehicle) {
         boolean bool = false;
-        System.out.println("Vehicle : " + vehicle);
-        System.out.println("Vehicle constructeur : " + vehicle.getConstructeur());
         if (vehicle.getConstructeur()== ""){
-            System.out.println("if - Vehicle constructeur : " + vehicle.getConstructeur());
             bool = true;
         }
         return bool;

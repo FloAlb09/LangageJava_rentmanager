@@ -48,29 +48,32 @@ public class ClientCreateServlet extends HttpServlet {
             String naissance_string = request.getParameter("naissance");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate naissance = LocalDate.parse(naissance_string, formatter);
+
             Client client = new Client(nom, prenom, email, naissance);
-            boolean testAgeLegal = ClientValidator.isLegal(client);
             List<Client> allClients = clientService.findAll();
+
+            boolean testAgeLegal = ClientValidator.isLegal(client);
             boolean testMailUsed = ClientValidator.isEmailUsed(allClients, client);
             boolean testNameLength = ClientValidator.isLenghtNameAtLeastThree(client);
             boolean testFirstNameLength = ClientValidator.isLenghtFirstnameAtLeastThree(client);
-            if (testAgeLegal & testMailUsed == false & testNameLength & testFirstNameLength) {
+
+            if (testAgeLegal && !testMailUsed && testNameLength && testFirstNameLength) {
                 try {
                     request.setAttribute("users", clientService.create(client));
                 } catch (ServiceException e) {
                     e.printStackTrace();
                 }
                 response.sendRedirect("/rentmanager/users");
-            } else if (testAgeLegal == false) {
+            } else if (!testAgeLegal) {
                 JOptionPane.showMessageDialog(null, "Le client doit être majeur", "Age", JOptionPane.ERROR_MESSAGE);
                 response.sendRedirect("/rentmanager/users/create");
             } else if (testMailUsed){
                 JOptionPane.showMessageDialog(null, "Ce mail est déjà utilisé", "Mail", JOptionPane.ERROR_MESSAGE);
                 response.sendRedirect("/rentmanager/users/create");
-            } else if (testNameLength == false){
+            } else if (!testNameLength){
                 JOptionPane.showMessageDialog(null, "Le nom d'un client doit comporter plus de 3 charactères", "nameLength", JOptionPane.ERROR_MESSAGE);
                 response.sendRedirect("/rentmanager/users/create");
-            } else if (testFirstNameLength == false){
+            } else if (!testFirstNameLength){
                 JOptionPane.showMessageDialog(null, "Le prénom d'un client doit comporter plus de 3 charactères", "firstnameLength", JOptionPane.ERROR_MESSAGE);
                 response.sendRedirect("/rentmanager/users/create");
             }
