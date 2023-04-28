@@ -36,7 +36,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="prenom" class="col-sm-2 control-label">Prenom</label>
+                                    <label for="prenom" class="col-sm-2 control-label">Pr&eacutenom</label>
 
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Prenom">

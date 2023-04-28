@@ -35,7 +35,7 @@
 										</div>
 									</div>
 									<div class="form-group">
-										<label for="prenomU" class="col-sm-2 control-label">Prenom</label>
+										<label for="prenomU" class="col-sm-2 control-label">Pr&eacutenom</label>
 
 										<div class="col-sm-10">
 											<input type="text" class="form-control" id="prenomU"

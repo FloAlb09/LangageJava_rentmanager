@@ -105,15 +105,6 @@ public class ReservationService {
         return null;
     }
 
-    public List<Reservation> findInfoAll() throws ServiceException {
-        try {
-            return this.reservationDao.findInfoAll();
-        } catch (DaoException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public long update(Reservation reservation, Long id) throws ServiceException {
         try {
             return this.reservationDao.update(reservation, id);

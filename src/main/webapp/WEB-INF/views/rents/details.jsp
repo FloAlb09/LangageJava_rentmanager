@@ -20,11 +20,11 @@
 						<!-- Profile Image -->
 						<div class="box box-primary">
 							<div class="box-body box-profile">
-								<h3 class="profile-username text-center">Reservation
+								<h3 class="profile-username text-center">R&eacuteservation
 									${reservation_id}</h3>
 
 								<ul class="list-group list-group-unbordered">
-									<li class="list-group-item"><b>Debut</b> <a
+									<li class="list-group-item"><b>D&eacutebut</b> <a
 										class="pull-right">${reservation_debut}</a></li>
 									<li class="list-group-item"><b>Fin</b> <a
 										class="pull-right">${reservation_fin}</a></li>
@@ -48,7 +48,7 @@
 												<th></th>
 												<th style="width: 10px">#</th>
 												<th>Nom</th>
-												<th>Prenom</th>
+												<th>Pr&eacutenom</th>
 												<th>Email</th>
 												<th>Date de naissance</th>
 											</tr>

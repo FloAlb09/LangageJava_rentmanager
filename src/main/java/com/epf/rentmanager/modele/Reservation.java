@@ -5,12 +5,33 @@ import java.time.LocalDate;
 public class Reservation {
     private Long id;
     private Long client_id;
+    private Client client;
     private String client_nom;
     private String client_email;
     private Long vehicle_id;
+    private Vehicle vehicle;
     private String vehicle_constructeur;
     private LocalDate debut;
     private LocalDate fin;
+
+    public Reservation(Long id, Client client, Vehicle vehicle, LocalDate debut, LocalDate fin) {
+        this.id = id;
+        this.client = client;
+        this.vehicle = vehicle;
+        this.debut = debut;
+        this.fin = fin;
+    }
+
+    public Reservation(Long id, Long client_id, Client client, Long vehicle_id, Vehicle vehicle, LocalDate debut, LocalDate fin) {
+        this.id = id;
+        this.client_id = client_id;
+        this.client = client;
+        this.vehicle_id = vehicle_id;
+        this.vehicle = vehicle;
+        this.debut = debut;
+        this.fin = fin;
+    }
+
 
     public Reservation(Long id, Long client_id, String client_nom, String client_email, Long vehicle_id, String vehicle_constructeur, LocalDate debut, LocalDate fin) {
         this.id = id;
@@ -62,7 +83,22 @@ public class Reservation {
         this.fin = fin;
     }
 
-    //getter and setter
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
     public Long getId() {
         return id;
     }
@@ -127,7 +163,6 @@ public class Reservation {
         this.vehicle_constructeur = vehicle_constructeur;
     }
 
-    //methode to_string
     @Override
     public String toString() {
         return "Reservation{" + "id=" + id + ", client_id=" + client_id + ", client_nom='" + client_nom + '\'' + ", client_email='" + client_email + '\'' + ", vehicle_id=" + vehicle_id + ", vehicle_constructeur='" + vehicle_constructeur + '\'' + ", debut=" + debut + ", fin=" + fin + '}';

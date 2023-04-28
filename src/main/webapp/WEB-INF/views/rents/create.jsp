@@ -14,7 +14,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1>
-                Reservations
+                R&eacuteservations
             </h1>
         </section>
 
@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="begin" class="col-sm-2 control-label">Date de debut</label>
+                                    <label for="begin" class="col-sm-2 control-label">Date de d&eacutebut</label>
 
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control" id="begin" name="begin"

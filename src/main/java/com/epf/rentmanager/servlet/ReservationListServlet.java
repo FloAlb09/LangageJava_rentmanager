@@ -8,10 +8,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.epf.rentmanager.modele.Client;
 import com.epf.rentmanager.modele.Reservation;
+import com.epf.rentmanager.modele.Vehicle;
+import com.epf.rentmanager.service.ClientService;
 import com.epf.rentmanager.service.ReservationService;
 
+import com.epf.rentmanager.service.VehicleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -19,6 +26,11 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 @WebServlet("/rents")
 public class ReservationListServlet extends HttpServlet{
     private static final long serialVersionUID = 1L;
+
+    @Autowired
+    ClientService clientService;
+    @Autowired
+    VehicleService vehicleService;
     @Autowired
     ReservationService reservationService;
 
@@ -32,8 +44,18 @@ public class ReservationListServlet extends HttpServlet{
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            request.setAttribute("listReservations", reservationService.findInfoAll());
-            this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/list.jsp").forward(request, response);
+            List<Reservation> listReservations = reservationService.findAll();
+            List<Reservation> listReservationsFormated = new ArrayList<>();
+            for (Reservation reservation : listReservations){
+                Client client = clientService.findById(reservation.getClient_id());
+                Vehicle vehicle = vehicleService.findById(reservation.getVehicle_id());
+                long id = reservation.getId();
+                LocalDate debut = reservation.getDebut();
+                LocalDate fin = reservation.getFin();
+                listReservationsFormated.add(new Reservation(id, client, vehicle, debut, fin));
+            }
+            request.setAttribute("listReservations", listReservationsFormated);
+            this.getServletContext().getRequestDispatcher("/WEB-INF/views/rents/list.jsp").forward(request,response);
         } catch (ServiceException e) {
             e.printStackTrace();
         }

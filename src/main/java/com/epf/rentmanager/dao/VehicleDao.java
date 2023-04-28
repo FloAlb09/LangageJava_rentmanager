@@ -16,7 +16,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class VehicleDao {
-
     private static final String FIND_VEHICLES_QUERY = "SELECT id, constructeur, nb_places FROM Vehicle;";
     private static final String FIND_VEHICLE_QUERY = "SELECT id, constructeur, nb_places FROM Vehicle WHERE id=?;";
     private static final String CREATE_VEHICLE_QUERY = "INSERT INTO Vehicle(constructeur, nb_places) VALUES(?, ?);";
@@ -27,7 +26,6 @@ public class VehicleDao {
     private static final String COUNT_VEHICLE_BY_USER_QUERY = "SELECT COUNT(DISTINCT Reservation.vehicle_id) FROM Vehicle INNER JOIN Reservation ON Reservation.vehicle_id = Vehicle.id WHERE client_id=?;";
 
     private VehicleDao() {
-
     }
 
     public List<Vehicle> findAll() throws DaoException {
@@ -129,7 +127,7 @@ public class VehicleDao {
             PreparedStatement ps = con.prepareStatement(FIND_VEHICLE_BY_USER_QUERY);
             ps.setLong(1, client_id);
             ResultSet rs = ps.executeQuery();
-            while (rs.next()){
+            while (rs.next()) {
                 long vehicle_id = rs.getLong("Vehicle.id");
                 String constructeur = rs.getString("Vehicle.constructeur");
                 int nb_places = rs.getInt("Vehicle.nb_places");

@@ -29,7 +29,7 @@
                                 <tr>
                                     <th style="width: 10px">#</th>
                                     <th>Nom</th>
-                                    <th>Prenom</th>
+                                    <th>Pr&eacutenom</th>
                                     <th>Email</th>
                                     <th>Naissance</th>
                                     <th>Action</th>
